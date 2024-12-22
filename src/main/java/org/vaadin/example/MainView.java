@@ -1,13 +1,22 @@
 package org.vaadin.example;
 
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.tabs.TabsVariant;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.vaadin.flow.router.RouterLink;
+
+import java.util.Optional;
 
 /**
  * A sample Vaadin view class.
@@ -21,39 +30,107 @@ import org.springframework.beans.factory.annotation.Autowired;
  * The main view contains a text field for getting the user name and a button
  * that shows a greeting message in a notification.
  */
-@Route
-public class MainView extends VerticalLayout {
+public class MainView extends AppLayout {
 
-    /**
-     * Construct a new Vaadin view.
-     * <p>
-     * Build the initial UI state for the user accessing the application.
-     *
-     * @param service The message service. Automatically injected Spring managed bean.
-     */
-    public MainView(@Autowired GreetService service) {
+    private final Tabs menu;
+    private H1 viewTitle;
 
-        // Use TextField for standard text input
-        TextField textField = new TextField("Your name");
-        textField.addClassName("bordered");
+    public MainView() {
+        // Use the drawer for the menu
+        setPrimarySection(Section.DRAWER);
 
-        // Button click listeners can be defined as lambda expressions
-        Button button = new Button("Say hello", e -> {
-            add(new Paragraph(service.greet(textField.getValue())));
-        });
+        // Make the nav bar a header
+        addToNavbar(true, createHeaderContent());
 
-        // Theme variants give you predefined extra styles for components.
-        // Example: Primary button has a more prominent look.
-        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        // Put the menu in the drawer
+        menu = createMenu();
+        addToDrawer(createDrawerContent(menu));
+    }
 
-        // You can specify keyboard shortcuts for buttons.
-        // Example: Pressing enter in this view clicks the Button.
-        button.addClickShortcut(Key.ENTER);
+    private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
+        final Tab tab = new Tab();
+        tab.add(new RouterLink(text, navigationTarget));
+        ComponentUtil.setData(tab, Class.class, navigationTarget);
+        return tab;
+    }
 
-        // Use custom CSS classes to apply styling. This is defined in
-        // styles.css.
-        addClassName("centered-content");
+    @Override
+    protected void afterNavigation() {
+        super.afterNavigation();
 
-        add(textField, button);
+        // Select the tab corresponding to currently shown view
+        getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
+
+        //        // Set the view title in the header
+        //        viewTitle.setText(getCurrentPageTitle());
+    }
+
+    private Optional<Tab> getTabForComponent(Component component) {
+        return menu.getChildren().filter(tab -> ComponentUtil.getData(tab, Class.class).equals(component.getClass())).findFirst()
+                .map(Tab.class::cast);
+    }
+
+    private String getCurrentPageTitle() {
+        return getContent().getClass().getAnnotation(PageTitle.class).value();
+    }
+
+    private Component createDrawerContent(Tabs menu) {
+        VerticalLayout layout = new VerticalLayout();
+
+        // Configure styling for the drawer
+        layout.setSizeFull();
+        layout.setPadding(false);
+        layout.setSpacing(false);
+        layout.getThemeList().set("spacing-s", true);
+        layout.setAlignItems(FlexComponent.Alignment.STRETCH);
+
+        //        // Have a drawer header with an application logo
+        //        HorizontalLayout logoLayout = new HorizontalLayout();
+        //        logoLayout.setId("logo");
+        //        logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        //        logoLayout.add(new Image("images/logo.png", "My Project logo"));
+        //        logoLayout.add(new H1("Wonderful reading"));
+
+        // Display the logo and the menu in the drawer
+        //        layout.add(logoLayout, menu);
+        layout.add(menu);
+        return layout;
+    }
+
+    private Component createHeaderContent() {
+        HorizontalLayout layout = new HorizontalLayout();
+
+        // Configure styling for the header
+        layout.setId("header");
+        layout.getThemeList().set("dark", true);
+        layout.setWidthFull();
+        layout.setSpacing(false);
+        layout.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        // Have the drawer toggle button on the left
+        //        layout.add(new DrawerToggle());
+
+        // Placeholder for the title of the current view.
+        // The title will be set after navigation.
+        //        viewTitle = new H1();
+        //        layout.add(viewTitle);
+
+        // A user icon
+        //        layout.add(new Image("images/user.svg", "Avatar"));
+
+        return layout;
+    }
+
+    private Tabs createMenu() {
+        final Tabs tabs = new Tabs();
+        tabs.setOrientation(Tabs.Orientation.VERTICAL);
+        tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL);
+        tabs.setId("tabs");
+        tabs.add(createMenuItems());
+        return tabs;
+    }
+
+    private Component[] createMenuItems() {
+        return new Tab[]{createTab("Admin", AdminView.class), createTab("Reading", ReadingView.class)};
     }
 }

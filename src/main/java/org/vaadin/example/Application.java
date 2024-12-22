@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * and some desktop browsers.
  */
 @SpringBootApplication
-@PWA(name = "Project Base for Vaadin with Spring", shortName = "Project Base")
+@PWA(name = "Wonderful reading", shortName = "Wonderful reading")
 @Theme("my-theme")
 public class Application implements AppShellConfigurator {
 
