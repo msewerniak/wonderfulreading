@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 public class Book {
 
+    private Long id;
     private String name;
     private List<Sentence> sentences = List.of(new Sentence(), new Sentence(), new Sentence());
 
@@ -16,7 +17,8 @@ public class Book {
         this.name = name;
     }
 
-    public Book(String name, String s1, String s2, String s3) {
+    public Book(Long id, String name, String s1, String s2, String s3) {
+        this.id = id;
         this.name = name;
         setSentence1(s1);
         setSentence2(s2);
@@ -74,4 +76,11 @@ public class Book {
         return words().stream().filter(word -> !previousWords.contains(word)).collect(Collectors.toSet());
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

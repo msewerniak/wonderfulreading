@@ -25,9 +25,9 @@ import java.util.List;
 public class AdminView extends SplitLayout {
 
     public final SentencesService sentencesService;
-    private final List<Book> books = List.of(new Book("1", "To jest Ola", "To jest Adaś", "To jest Mruczek"),
-            new Book("2", "Ala je kanapkę", "Adaś je banana", "Mruczek pije mleko"),
-            new Book("3", "Adaś skacze", "Ola biega", "Mruczek śpi"));
+    private final List<Book> books = List.of(new Book(1L, "1", "To jest Ola", "To jest Adaś", "To jest Mruczek"),
+            new Book(2L, "2", "Ala je kanapkę", "Adaś je banana", "Mruczek pije mleko"),
+            new Book(3L, "3", "Adaś skacze", "Ola biega", "Mruczek śpi"));
 
     Binder<Book> binder = new Binder<>(Book.class);
     private Book selectedBook = new Book("nothing");
