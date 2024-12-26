@@ -1,5 +1,6 @@
 package com.ms.wonderfulreading.model.sentences;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -8,21 +9,17 @@ public class Book {
 
     private Long id;
     private String name;
-    private List<Sentence> sentences = List.of(new Sentence(), new Sentence(), new Sentence());
+    private List<Sentence> sentences;
 
-    public Book() {
-    }
-
-    public Book(String name) {
-        this.name = name;
-    }
-
-    public Book(Long id, String name, String s1, String s2, String s3) {
+    public Book(Long id, String name, List<String> sentences) {
         this.id = id;
         this.name = name;
-        setSentence1(s1);
-        setSentence2(s2);
-        setSentence3(s3);
+        this.sentences = new ArrayList<>();
+        sentences.forEach(s -> this.sentences.add(new Sentence(s)));
+    }
+
+    public Book(Book book) {
+        this(book.id, book.name, book.sentences.stream().map(Sentence::getSentence).toList());
     }
 
     public String getName() {
@@ -41,39 +38,15 @@ public class Book {
         this.sentences = sentences;
     }
 
-    public String getSentence1() {
-        return sentences.get(0).getSentence();
-    }
-
-    public void setSentence1(String value) {
-        sentences.get(0).setSentence(value);
-    }
-
-    public String getSentence2() {
-        return sentences.get(1).getSentence();
-    }
-
-    public void setSentence2(String value) {
-        sentences.get(1).setSentence(value);
-    }
-
-    public String getSentence3() {
-        return sentences.get(2).getSentence();
-    }
-
-    public void setSentence3(String value) {
-        sentences.get(2).setSentence(value);
-    }
-
-    Set<Word> words() {
+    public Set<Word> words() {
         return sentences.stream().map(Sentence::words).flatMap(Set::stream).collect(Collectors.toSet());
     }
 
-    public Set<Word> newWords(List<Book> previousBooks) {
+    public List<Word> newWords(List<Book> previousBooks) {
 
         Set<Word> previousWords = previousBooks.stream().map(Book::words).flatMap(Set::stream).collect(Collectors.toSet());
 
-        return words().stream().filter(word -> !previousWords.contains(word)).collect(Collectors.toSet());
+        return words().stream().filter(word -> !previousWords.contains(word)).toList();
     }
 
     public Long getId() {

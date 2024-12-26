@@ -5,6 +5,7 @@ import com.ms.wonderfulreading.MainView;
 import com.ms.wonderfulreading.model.sentences.Book;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -16,9 +17,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "books", layout = MainView.class)
 public class BooksView extends Div {
 
+    private final BooksService booksService;
+
     @Autowired
     public BooksView(BooksService booksService) {
+        this.booksService = booksService;
         booksService.getBooks().forEach(book -> add(addBookComponent(book)));
+        add(addBookButton());
+    }
+
+    private Component addBookButton() {
+
+        Button addBookButton = new Button("Add Book");
+        addBookButton.addClickListener(event -> {
+            UI.getCurrent().navigate("book/" + booksService.nextBookId());
+        });
+        return addBookButton;
     }
 
     private Component addBookComponent(Book book) {
