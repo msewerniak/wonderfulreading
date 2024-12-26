@@ -1,11 +1,12 @@
-package org.vaadin.example;
+package com.ms.wonderfulreading;
 
+import com.ms.wonderfulreading.admin.AdminView;
+import com.ms.wonderfulreading.reading.ReadingView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -13,7 +14,6 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 
 import java.util.Optional;
@@ -61,8 +61,8 @@ public class MainView extends AppLayout {
         // Select the tab corresponding to currently shown view
         getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
 
-        //        // Set the view title in the header
-        //        viewTitle.setText(getCurrentPageTitle());
+        // Set the view title in the header
+        viewTitle.setText(getCurrentPageTitle());
     }
 
     private Optional<Tab> getTabForComponent(Component component) {
@@ -108,12 +108,12 @@ public class MainView extends AppLayout {
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         // Have the drawer toggle button on the left
-        //        layout.add(new DrawerToggle());
+        layout.add(new DrawerToggle());
 
         // Placeholder for the title of the current view.
         // The title will be set after navigation.
-        //        viewTitle = new H1();
-        //        layout.add(viewTitle);
+        viewTitle = new H1();
+        layout.add(viewTitle);
 
         // A user icon
         //        layout.add(new Image("images/user.svg", "Avatar"));

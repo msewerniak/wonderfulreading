@@ -1,12 +1,13 @@
-package org.vaadin.example;
+package com.ms.wonderfulreading.reading;
 
+import com.ms.wonderfulreading.MainView;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 
-@PageTitle("Learing to read")
+@PageTitle("Reading")
 @RouteAlias(value = "", layout = MainView.class)
 @Route(value = "reading", layout = MainView.class)
 public class ReadingView extends VerticalLayout {
