@@ -16,7 +16,11 @@ public class BooksService {
         return books;
     }
 
-    public Book get(Long bookId) {
+    public List<Book> getPreviousBooks(Long bookId) {
+        return books.stream().filter(b -> b.getId() < bookId).toList();
+    }
+
+    public Book getById(Long bookId) {
         return books.stream().filter(book -> book.getId().equals(bookId)).findFirst().orElse(null);
     }
 }

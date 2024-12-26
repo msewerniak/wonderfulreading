@@ -12,33 +12,27 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-
 @PageTitle("Books")
 @Route(value = "books", layout = MainView.class)
 public class BooksView extends Div {
 
     @Autowired
     public BooksView(BooksService booksService) {
-
-        List<Book> books = booksService.getBooks();
-
-        books.forEach(book -> add(addBookComponent(book)));
+        booksService.getBooks().forEach(book -> add(addBookComponent(book)));
     }
 
     private Component addBookComponent(Book book) {
 
         Span span = new Span(book.getName());
         span.getStyle().set("font-weight", "bold");
+
         VerticalLayout layout = new VerticalLayout(span);
 
         book.getSentences().forEach(sentence -> {
             layout.add(new Span(sentence.getSentence()));
         });
 
-        layout.addClickListener(event -> {
-            UI.getCurrent().navigate("book/" + book.getId());
-        });
+        layout.addClickListener(event -> UI.getCurrent().navigate("book/" + book.getId()));
 
         return new Div(layout);
     }
