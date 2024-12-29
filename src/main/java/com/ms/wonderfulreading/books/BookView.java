@@ -13,11 +13,17 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
@@ -26,7 +32,6 @@ import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,40 +44,96 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
     private List<Book> previousBooks;
     private Book book;
 
-    private final FormLayout titleFormLayout = new FormLayout();
-    private final FormLayout sentencesFormLayout = new FormLayout();
-    private final VerticalLayout newWordsHorizontalLayout = new VerticalLayout();
-    private final VerticalLayout knownWordsHorizontalLayout = new VerticalLayout();
-    private final HorizontalLayout lessonsHorizontalLayout = new HorizontalLayout();
-    private final HorizontalLayout generateLessonsHorizontalLayout = new HorizontalLayout();
-    private final HorizontalLayout buttonsHorizontalLayout = new HorizontalLayout();
+    private final TextField bookTitleTextField = new TextField();
+    private final IntegerField bookNumberOfDaysTextField = new IntegerField();
+    private final HorizontalLayout lessonsLayout = new HorizontalLayout();
+    private final VerticalLayout bookSentencesLayout = new VerticalLayout();
+
+    private final TextField newWordsSearch = new TextField();
+    private final Grid<Word> newWordsGrid = new Grid<>(Word.class, false);
+    private final TextField knownWordsSearch = new TextField();
+    private final Grid<Word> knownWordsGrid = new Grid<>(Word.class, false);
 
     public BookView(BooksService booksService) {
         this.booksService = booksService;
+    }
 
-        add(titleFormLayout);
-        add(new HorizontalLayout(sentencesFormLayout, newWordsHorizontalLayout, knownWordsHorizontalLayout));
-        add(buttonsHorizontalLayout);
-        add(generateLessonsHorizontalLayout);
-        add(lessonsHorizontalLayout);
+    private FormLayout buildTitleAndDaysLayout() {
+
+        FormLayout titleAndDaysLayout = new FormLayout();
+        titleAndDaysLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0px", 1));
+        titleAndDaysLayout.setLabelWidth("150px");
+
+        bookTitleTextField.setValue(book.getName());
+        bookTitleTextField.addValueChangeListener(event -> book.setName(event.getValue()));
+        titleAndDaysLayout.addFormItem(bookTitleTextField, "Book title");
+
+        bookNumberOfDaysTextField.setStepButtonsVisible(true);
+        bookNumberOfDaysTextField.setMin(2);
+        bookNumberOfDaysTextField.setMax(5);
+        bookNumberOfDaysTextField.setValue(book.getWordsPerDay());
+        bookNumberOfDaysTextField.addValueChangeListener(event -> {
+            book.setWordsPerDay(event.getValue());
+            book.generateUnit(previousBooks);
+            refreshLessonsLayout();
+        });
+        titleAndDaysLayout.addFormItem(bookNumberOfDaysTextField, "Words per day");
+        return titleAndDaysLayout;
+    }
+
+    private Component buildButtonsLayout() {
+
+        Button cancel = new Button("Cancel", event -> {
+            UI.getCurrent().navigate("books");
+        });
+        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        Button save = new Button("Save", event -> {
+            booksService.saveBook(book);
+            UI.getCurrent().navigate("books");
+        });
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        return new HorizontalLayout(save, cancel);
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        Optional<Long> bookId = event.getRouteParameters().get(BOOK_ID).map(Long::parseLong);
+        Long id = event.getRouteParameters().get(BOOK_ID).map(Long::parseLong).orElse(booksService.nextBookId());
 
-        bookId.ifPresent(id -> {
-            Book bookById = booksService.getById(id);
-            this.book = bookById != null ? new Book(bookById) : new Book(id, id.toString(), new ArrayList<>());
-        });
-        bookId.ifPresent(id -> this.previousBooks = booksService.getPreviousBooks(id));
+        Book bookById = booksService.getById(id);
+        this.book = bookById != null ? new Book(bookById) : new Book(id, "Book " + id, 3, new ArrayList<>());
+        this.previousBooks = booksService.getPreviousBooks(id);
 
-        buildTitleField();
-        buildLessonsGenerateButtons();
-        buildSaveCancelButtons();
+        add(buildTitleAndDaysLayout());
+        add(lessonsLayout);
+        add(buildButtonsLayout());
+        add(buildWordsLayout());
 
+        refreshLessonsLayout();
+        refreshBookSentencesLayout();
+
+        refreshNewWordsLayout();
         refreshKnownWordsLayout();
-        refreshSentencesLayout();
+    }
+
+    private void refreshLessonsLayout() {
+
+        Unit unit = book.getUnit();
+
+        List<WordLesson> wordLessons = unit.lessons();
+        List<SentenceLesson> sentenceLessons = unit.sentenceLessons();
+
+        lessonsLayout.removeAll();
+        for (int i = 0; i < wordLessons.size(); i++) {
+            lessonsLayout.add(buildWordsLessonLayout(wordLessons.get(i), i + 1));
+        }
+
+        for (int i = 0; i < sentenceLessons.size(); i++) {
+            lessonsLayout.add(buildSentencesLessonLayout(sentenceLessons.get(i), wordLessons.size() + i + 1));
+        }
+
+        lessonsLayout.add(bookSentencesLayout);
     }
 
     private static Component createWordsLayout(Collection<Word> newWords) {
@@ -94,53 +155,18 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         return scroller;
     }
 
-    private void buildTitleField() {
-        TextField nameTextField = new TextField();
-        nameTextField.setValue(book.getName());
-
-        titleFormLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0px", 1));
-        titleFormLayout.setLabelWidth("150px");
-        titleFormLayout.addFormItem(nameTextField, "Book name");
-    }
-
-    private void buildLessonsGenerateButtons() {
-
-        TextField wordsPerDay = new TextField("Words per day");
-        wordsPerDay.setValue("3");
-
-        Button generateLessonsButton = new Button("Generate lessons");
-        generateLessonsButton.addClickListener(event -> refreshLessonsLayout(Integer.parseInt(wordsPerDay.getValue())));
-
-        generateLessonsHorizontalLayout.setDefaultVerticalComponentAlignment(Alignment.END);
-        generateLessonsHorizontalLayout.add(wordsPerDay, generateLessonsButton);
-    }
-
-    private void refreshLessonsLayout(int wordsPerDay) {
-
-        Set<Word> newWords = book.newWords(previousBooks);
-
-        Unit unit = new Unit(newWords, wordsPerDay);
-
-        List<WordLesson> wordLessons = unit.lessons();
-        List<SentenceLesson> sentenceLessons = unit.sentenceLessons();
-
-        lessonsHorizontalLayout.removeAll();
-        for (int i = 0; i < wordLessons.size(); i++) {
-            lessonsHorizontalLayout.add(buildWordsLessonLayout(wordLessons.get(i), i + 1));
-        }
-
-        for (int i = 0; i < sentenceLessons.size(); i++) {
-            lessonsHorizontalLayout.add(buildSentencesLessonLayout(sentenceLessons.get(i), wordLessons.size() + i + 1));
-        }
-    }
-
     private Component buildWordsLessonLayout(WordLesson lesson, int day) {
 
         VerticalLayout lessonVerticalLayout = new VerticalLayout();
         lessonVerticalLayout.add(new Span("Day " + day));
 
         lesson.words().forEach(word -> {
-            lessonVerticalLayout.add(new TextField("", word.getValue(), ""));
+            TextField wordTextField = new TextField("", word.getValue(), "");
+            wordTextField.addValueChangeListener(event -> {
+                word.setValue(event.getValue());
+                refreshNewWordsLayout();
+            });
+            lessonVerticalLayout.add(wordTextField);
         });
 
         return lessonVerticalLayout;
@@ -152,71 +178,83 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         lessonVerticalLayout.add(new Span("Day " + day));
 
         lesson.words().forEach(sentence -> {
-            lessonVerticalLayout.add(new TextField("", "", sentence.getSentence()));
+            TextField wordTextField = new TextField("", sentence.getSentence(), "");
+            lessonVerticalLayout.add(wordTextField);
         });
 
         return lessonVerticalLayout;
     }
 
-    private void refreshSentencesLayout() {
+    private void refreshBookSentencesLayout() {
 
-        sentencesFormLayout.removeAll();
-        sentencesFormLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1));
-        sentencesFormLayout.setLabelWidth("150px");
+        bookSentencesLayout.removeAll();
+        bookSentencesLayout.add(new Span("Book"));
 
         book.getSentences().forEach(sentence -> {
-            TextField sentenceTextField = new TextField();
-            sentenceTextField.setValue(sentence.getSentence());
+
+            TextField sentenceTextField = new TextField("", sentence.getSentence(), "");
+            sentenceTextField.setClearButtonVisible(true);
             sentenceTextField.addValueChangeListener(event -> {
                 sentence.setSentence(sentenceTextField.getValue());
-                refreshNewWordsLayout();
+                if (event.getValue().isEmpty()) {
+                    clearEmptyBookSentencesAndRefresh();
+                }
+                book.generateUnit(previousBooks);
+                refreshLessonsLayout();
             });
-            sentencesFormLayout.addFormItem(sentenceTextField, "Sentence");
-        });
 
+            bookSentencesLayout.add(sentenceTextField);
+        });
         TextField newSentenceTextField = new TextField();
         newSentenceTextField.addValueChangeListener(event -> {
             book.getSentences().add(new Sentence(event.getValue()));
-            refreshSentencesLayout();
+            refreshBookSentencesLayout();
+            book.generateUnit(previousBooks);
+            refreshLessonsLayout();
         });
-        sentencesFormLayout.addFormItem(newSentenceTextField, "Sentence");
-        newSentenceTextField.focus();
-
-        refreshNewWordsLayout();
+        bookSentencesLayout.add(newSentenceTextField);
     }
 
-    private void buildSaveCancelButtons() {
+    private void clearEmptyBookSentencesAndRefresh() {
+        book.setSentences(book.getSentences().stream().filter(s -> !s.getSentence().isEmpty()).collect(Collectors.toList()));
+        refreshBookSentencesLayout();
+    }
 
-        Button cancel = new Button("Cancel", event -> {
-            UI.getCurrent().navigate("books");
-        });
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+    private HorizontalLayout buildWordsLayout() {
 
-        Button save = new Button("Save", event -> {
-            booksService.saveBook(book);
-            UI.getCurrent().navigate("books");
-        });
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        return new HorizontalLayout(buildWordsLayout(newWordsGrid, newWordsSearch), buildWordsLayout(knownWordsGrid, knownWordsSearch));
+    }
 
-        buttonsHorizontalLayout.add(save, cancel);
+    private Component buildWordsLayout(Grid<Word> grid, TextField searchTextField) {
+
+        grid.setMinWidth("200px");
+        grid.addColumn(Word::getValue);
+
+        searchTextField.setPlaceholder("Search");
+        searchTextField.setClearButtonVisible(true);
+        searchTextField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchTextField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        return new VerticalLayout(searchTextField, grid);
     }
 
     private void refreshNewWordsLayout() {
-
-        Set<Word> newWords = book.newWords(this.previousBooks);
-
-        newWordsHorizontalLayout.removeAll();
-        newWordsHorizontalLayout.add(new Span("New words: " + newWords.size()));
-        newWordsHorizontalLayout.add(createWordsLayout(newWords));
+        Set<Word> words = book.newWords(this.previousBooks);
+        // TODO: add words from unit....
+        refreshWords(newWordsSearch, newWordsGrid, words);
     }
 
     private void refreshKnownWordsLayout() {
 
         Set<Word> knownWords = previousBooks.stream().map(Book::words).flatMap(Collection::stream).collect(Collectors.toSet());
-
-        knownWordsHorizontalLayout.removeAll();
-        knownWordsHorizontalLayout.add(new Span("Known words: " + knownWords.size()));
-        knownWordsHorizontalLayout.add(createWordsLayout(knownWords));
+        refreshWords(knownWordsSearch, knownWordsGrid, knownWords);
     }
 
+    private void refreshWords(TextField search, Grid<Word> grid, Set<Word> words) {
+
+        GridListDataView<Word> dataView = grid.setItems(words);
+        dataView.addFilter(word -> word.getValue().toLowerCase().startsWith(search.getValue().toLowerCase().trim()));
+
+        search.addValueChangeListener(e -> dataView.refreshAll());
+    }
 }

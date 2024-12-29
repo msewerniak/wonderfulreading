@@ -9,6 +9,9 @@ public class Unit {
     private final List<WordLesson> wordLessons = new ArrayList<>();
     private final List<SentenceLesson> sentenceLessons = new ArrayList<>();
 
+    public Unit() {
+    }
+    
     public Unit(Set<Word> words, Integer perDay) {
 
         List<Word> wordList = new ArrayList<>(words);
@@ -27,7 +30,7 @@ public class Unit {
                 if (index < wordList.size()) {
                     lessonWords.add(wordList.get(index));
                 } else {
-                    lessonWords.add(new Word("?"));
+                    lessonWords.add(new Word(""));
                 }
                 lessonSentences.add(new Sentence(""));
             }

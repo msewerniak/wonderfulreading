@@ -26,4 +26,9 @@ public class Sentence {
     Set<Word> words() {
         return Arrays.stream(sentence.split("\s")).filter(k -> !k.isEmpty()).map(Word::new).collect(Collectors.toSet());
     }
+
+    @Override
+    public String toString() {
+        return sentence;
+    }
 }

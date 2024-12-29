@@ -9,17 +9,26 @@ public class Book {
 
     private Long id;
     private String name;
+    private Integer wordsPerDay;
+    private Unit unit;
     private List<Sentence> sentences;
 
-    public Book(Long id, String name, List<String> sentences) {
+    public Book(Long id, String name, Integer wordsPerDay, List<String> sentences) {
+        this(id, name, wordsPerDay, new Unit(), sentences);
+    }
+
+    public Book(Long id, String name, Integer wordsPerDay, Unit unit, List<String> sentences) {
         this.id = id;
         this.name = name;
+        this.wordsPerDay = wordsPerDay;
+        this.unit = unit;
         this.sentences = new ArrayList<>();
         sentences.forEach(s -> this.sentences.add(new Sentence(s)));
     }
 
+
     public Book(Book book) {
-        this(book.id, book.name, book.sentences.stream().map(Sentence::getSentence).toList());
+        this(book.id, book.name, book.wordsPerDay, book.unit, book.sentences.stream().map(Sentence::getSentence).toList());
     }
 
     public String getName() {
@@ -55,5 +64,26 @@ public class Book {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getWordsPerDay() {
+        return wordsPerDay;
+    }
+
+    public void setWordsPerDay(Integer wordsPerDay) {
+        this.wordsPerDay = wordsPerDay;
+    }
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }
+
+    public void generateUnit(List<Book> previousBooks) {
+        Set<Word> newWords = newWords(previousBooks);
+        this.unit = new Unit(newWords, wordsPerDay);
     }
 }
