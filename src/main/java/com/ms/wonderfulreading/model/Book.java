@@ -28,7 +28,7 @@ public class Book {
 
 
     public Book(Book book) {
-        this(book.id, book.name, book.wordsPerDay, book.unit, book.sentences.stream().map(Sentence::getSentence).toList());
+        this(book.id, book.name, book.wordsPerDay, new Unit(book.unit), book.sentences.stream().map(Sentence::getSentence).toList());
     }
 
     public String getName() {

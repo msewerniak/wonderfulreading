@@ -8,7 +8,8 @@ public class Sentence {
 
     private String sentence;
 
-    public Sentence() {
+    public Sentence(Sentence sentence) {
+        this(sentence.getSentence());
     }
 
     public Sentence(String sentence) {

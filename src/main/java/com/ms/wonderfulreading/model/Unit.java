@@ -13,6 +13,16 @@ public class Unit {
 
     public Unit() {
     }
+
+    public Unit(Unit unit) {
+        this(unit.wordLessons.stream().map(WordLesson::new).toList(),
+                unit.sentenceLessons.stream().map(s -> new SentenceLesson(s)).toList());
+    }
+
+    public Unit(List<WordLesson> wordLessons, List<SentenceLesson> sentenceLessons) {
+        this.wordLessons.addAll(wordLessons);
+        this.sentenceLessons.addAll(sentenceLessons);
+    }
     
     public Unit(Set<Word> words, Integer perDay) {
 

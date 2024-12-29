@@ -6,6 +6,10 @@ public class Word {
 
     private String value;
 
+    public Word(Word word) {
+        this(word.getValue());
+    }
+    
     public Word(String value) {
         this.value = value;
     }

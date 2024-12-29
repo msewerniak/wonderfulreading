@@ -51,8 +51,10 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
 
     private final TextField newWordsSearch = new TextField();
     private final Grid<Word> newWordsGrid = new Grid<>(Word.class, false);
+    private final Span newWordsSummarySpan = new Span();
     private final TextField knownWordsSearch = new TextField();
     private final Grid<Word> knownWordsGrid = new Grid<>(Word.class, false);
+    private final Span knownWordsSummarySpan = new Span();
 
     public BookView(BooksService booksService) {
         this.booksService = booksService;
@@ -178,9 +180,12 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         VerticalLayout lessonVerticalLayout = new VerticalLayout();
         lessonVerticalLayout.add(new Span("Day " + day));
 
-        lesson.words().forEach(sentence -> {
+        lesson.sentences().forEach(sentence -> {
             TextField wordTextField = new TextField("", sentence.getSentence(), "");
             wordTextField.setClearButtonVisible(true);
+            wordTextField.addValueChangeListener(event -> {
+                sentence.setSentence(event.getValue());
+            });
             lessonVerticalLayout.add(wordTextField);
         });
 
@@ -227,10 +232,11 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
 
     private HorizontalLayout buildWordsLayout() {
 
-        return new HorizontalLayout(buildWordsLayout(newWordsGrid, newWordsSearch), buildWordsLayout(knownWordsGrid, knownWordsSearch));
+        return new HorizontalLayout(buildWordsLayout(newWordsGrid, newWordsSearch, newWordsSummarySpan),
+                buildWordsLayout(knownWordsGrid, knownWordsSearch, knownWordsSummarySpan));
     }
 
-    private Component buildWordsLayout(Grid<Word> grid, TextField searchTextField) {
+    private Component buildWordsLayout(Grid<Word> grid, TextField searchTextField, Span summary) {
 
         grid.setMinWidth("200px");
         grid.addColumn(Word::getValue);
@@ -240,26 +246,27 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         searchTextField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
         searchTextField.setValueChangeMode(ValueChangeMode.EAGER);
 
-        return new VerticalLayout(searchTextField, grid);
+        return new VerticalLayout(searchTextField, grid, summary);
     }
 
     private void refreshNewWordsLayout() {
         Set<Word> newWords = book.getUnit().newWords();
-        refreshWords(newWordsSearch, newWordsGrid, newWords);
+        refreshWords(newWordsSearch, newWordsGrid, newWordsSummarySpan, newWords);
     }
 
     private void refreshKnownWordsLayout() {
 
         Set<Word> knownWords =
                 previousBooks.stream().map(Book::getUnit).map(Unit::newWords).flatMap(Collection::stream).collect(Collectors.toSet());
-        refreshWords(knownWordsSearch, knownWordsGrid, knownWords);
+        refreshWords(knownWordsSearch, knownWordsGrid, knownWordsSummarySpan, knownWords);
     }
 
-    private void refreshWords(TextField search, Grid<Word> grid, Set<Word> words) {
+    private void refreshWords(TextField search, Grid<Word> grid, Span summary, Set<Word> words) {
 
         GridListDataView<Word> dataView = grid.setItems(words);
         dataView.addFilter(word -> word.getValue().toLowerCase().startsWith(search.getValue().toLowerCase().trim()));
-
+        summary.setText("Words " + words.size());
+        
         search.addValueChangeListener(e -> dataView.refreshAll());
     }
 }
