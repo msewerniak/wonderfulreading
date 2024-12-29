@@ -1,8 +1,10 @@
 package com.ms.wonderfulreading.model.sentences;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Unit {
 
@@ -40,11 +42,15 @@ public class Unit {
         }
     }
 
-    public List<WordLesson> lessons() {
+    public List<WordLesson> wordLessons() {
         return wordLessons;
     }
 
     public List<SentenceLesson> sentenceLessons() {
         return sentenceLessons;
+    }
+
+    public Set<Word> newWords() {
+        return wordLessons.stream().map(WordLesson::words).flatMap(Collection::stream).filter(Word::hasValue).collect(Collectors.toSet());
     }
 }

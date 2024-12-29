@@ -47,15 +47,16 @@ public class Book {
         this.sentences = sentences;
     }
 
-    public Set<Word> words() {
-        return sentences.stream().map(Sentence::words).flatMap(Set::stream).collect(Collectors.toSet());
+    private Set<Word> wordsFromSentences() {
+        return sentences.stream().map(Sentence::words).flatMap(Set::stream).filter(Word::hasValue).collect(Collectors.toSet());
     }
 
-    public Set<Word> newWords(List<Book> previousBooks) {
+    private Set<Word> generateNewWords(List<Book> previousBooks) {
 
-        Set<Word> previousWords = previousBooks.stream().map(Book::words).flatMap(Set::stream).collect(Collectors.toSet());
+        Set<Word> previousWords = previousBooks.stream().map(Book::getUnit).map(Unit::newWords).flatMap(Set::stream).filter(Word::hasValue)
+                .collect(Collectors.toSet());
 
-        return words().stream().filter(word -> !previousWords.contains(word)).collect(Collectors.toSet());
+        return wordsFromSentences().stream().filter(word -> !previousWords.contains(word)).collect(Collectors.toSet());
     }
 
     public Long getId() {
@@ -83,7 +84,7 @@ public class Book {
     }
 
     public void generateUnit(List<Book> previousBooks) {
-        Set<Word> newWords = newWords(previousBooks);
+        Set<Word> newWords = generateNewWords(previousBooks);
         this.unit = new Unit(newWords, wordsPerDay);
     }
 }

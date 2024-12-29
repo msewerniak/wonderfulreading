@@ -18,6 +18,10 @@ public class Word {
         this.value = value;
     }
 
+    public boolean hasValue() {
+        return value != null && !value.isEmpty();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

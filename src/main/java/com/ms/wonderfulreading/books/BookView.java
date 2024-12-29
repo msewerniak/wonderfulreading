@@ -121,7 +121,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
 
         Unit unit = book.getUnit();
 
-        List<WordLesson> wordLessons = unit.lessons();
+        List<WordLesson> wordLessons = unit.wordLessons();
         List<SentenceLesson> sentenceLessons = unit.sentenceLessons();
 
         lessonsLayout.removeAll();
@@ -162,6 +162,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
 
         lesson.words().forEach(word -> {
             TextField wordTextField = new TextField("", word.getValue(), "");
+            wordTextField.setClearButtonVisible(true);
             wordTextField.addValueChangeListener(event -> {
                 word.setValue(event.getValue());
                 refreshNewWordsLayout();
@@ -179,6 +180,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
 
         lesson.words().forEach(sentence -> {
             TextField wordTextField = new TextField("", sentence.getSentence(), "");
+            wordTextField.setClearButtonVisible(true);
             lessonVerticalLayout.add(wordTextField);
         });
 
@@ -201,16 +203,19 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
                 }
                 book.generateUnit(previousBooks);
                 refreshLessonsLayout();
+                refreshNewWordsLayout();
             });
 
             bookSentencesLayout.add(sentenceTextField);
         });
         TextField newSentenceTextField = new TextField();
+        newSentenceTextField.focus();
         newSentenceTextField.addValueChangeListener(event -> {
             book.getSentences().add(new Sentence(event.getValue()));
             refreshBookSentencesLayout();
             book.generateUnit(previousBooks);
             refreshLessonsLayout();
+            refreshNewWordsLayout();
         });
         bookSentencesLayout.add(newSentenceTextField);
     }
@@ -239,14 +244,14 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void refreshNewWordsLayout() {
-        Set<Word> words = book.newWords(this.previousBooks);
-        // TODO: add words from unit....
-        refreshWords(newWordsSearch, newWordsGrid, words);
+        Set<Word> newWords = book.getUnit().newWords();
+        refreshWords(newWordsSearch, newWordsGrid, newWords);
     }
 
     private void refreshKnownWordsLayout() {
 
-        Set<Word> knownWords = previousBooks.stream().map(Book::words).flatMap(Collection::stream).collect(Collectors.toSet());
+        Set<Word> knownWords =
+                previousBooks.stream().map(Book::getUnit).map(Unit::newWords).flatMap(Collection::stream).collect(Collectors.toSet());
         refreshWords(knownWordsSearch, knownWordsGrid, knownWords);
     }
 
