@@ -42,11 +42,11 @@ public class Book {
         return sentences.stream().map(Sentence::words).flatMap(Set::stream).collect(Collectors.toSet());
     }
 
-    public List<Word> newWords(List<Book> previousBooks) {
+    public Set<Word> newWords(List<Book> previousBooks) {
 
         Set<Word> previousWords = previousBooks.stream().map(Book::words).flatMap(Set::stream).collect(Collectors.toSet());
 
-        return words().stream().filter(word -> !previousWords.contains(word)).toList();
+        return words().stream().filter(word -> !previousWords.contains(word)).collect(Collectors.toSet());
     }
 
     public Long getId() {

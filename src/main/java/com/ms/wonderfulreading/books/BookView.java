@@ -39,16 +39,40 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
     private List<Book> previousBooks;
     private Book book;
 
-    private FormLayout titleFormLayout = new FormLayout();
-    private FormLayout sentencesFormLayout = new FormLayout();
-    private VerticalLayout newWordsHorizontalLayout = new VerticalLayout();
-    private VerticalLayout knownWordsHorizontalLayout = new VerticalLayout();
-    private HorizontalLayout lessonsHorizontalLayout = new HorizontalLayout();
-    private HorizontalLayout generateLessonsHorizontalLayout = new HorizontalLayout();
-    private HorizontalLayout buttonsHorizontalLayout = new HorizontalLayout();
+    private final FormLayout titleFormLayout = new FormLayout();
+    private final FormLayout sentencesFormLayout = new FormLayout();
+    private final VerticalLayout newWordsHorizontalLayout = new VerticalLayout();
+    private final VerticalLayout knownWordsHorizontalLayout = new VerticalLayout();
+    private final HorizontalLayout lessonsHorizontalLayout = new HorizontalLayout();
+    private final HorizontalLayout generateLessonsHorizontalLayout = new HorizontalLayout();
+    private final HorizontalLayout buttonsHorizontalLayout = new HorizontalLayout();
 
     public BookView(BooksService booksService) {
         this.booksService = booksService;
+
+        add(titleFormLayout);
+        add(new HorizontalLayout(sentencesFormLayout, newWordsHorizontalLayout, knownWordsHorizontalLayout));
+        add(buttonsHorizontalLayout);
+        add(generateLessonsHorizontalLayout);
+        add(lessonsHorizontalLayout);
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        Optional<Long> bookId = event.getRouteParameters().get(BOOK_ID).map(Long::parseLong);
+
+        bookId.ifPresent(id -> {
+            Book bookById = booksService.getById(id);
+            this.book = bookById != null ? new Book(bookById) : new Book(id, id.toString(), new ArrayList<>());
+        });
+        bookId.ifPresent(id -> this.previousBooks = booksService.getPreviousBooks(id));
+
+        buildTitleField();
+        buildLessonsGenerateButtons();
+        buildSaveCancelButtons();
+
+        refreshKnownWordsLayout();
+        refreshSentencesLayout();
     }
 
     private static Component createWordsLayout(Collection<Word> newWords) {
@@ -70,34 +94,10 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         return scroller;
     }
 
-    @Override
-    public void beforeEnter(BeforeEnterEvent event) {
-        Optional<Long> bookId = event.getRouteParameters().get(BOOK_ID).map(Long::parseLong);
-
-        bookId.ifPresent(id -> {
-            Book bookById = booksService.getById(id);
-            this.book = bookById != null ? new Book(bookById) : new Book(id, id.toString(), new ArrayList<>());
-        });
-        bookId.ifPresent(id -> this.previousBooks = booksService.getPreviousBooks(id));
-
-        add(titleFormLayout);
-
-        add(new HorizontalLayout(sentencesFormLayout, newWordsHorizontalLayout, knownWordsHorizontalLayout));
-        add(buttonsHorizontalLayout);
-        add(generateLessonsHorizontalLayout);
-        add(lessonsHorizontalLayout);
-
-        buildTitleField();
-        buildLessonsGenerateButtons();
-        buildSaveCancelButtons();
-
-        refreshKnownWordsLayout();
-        refreshSentencesLayout();
-    }
-
     private void buildTitleField() {
         TextField nameTextField = new TextField();
         nameTextField.setValue(book.getName());
+
         titleFormLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0px", 1));
         titleFormLayout.setLabelWidth("150px");
         titleFormLayout.addFormItem(nameTextField, "Book name");
@@ -109,17 +109,18 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         wordsPerDay.setValue("3");
 
         Button generateLessonsButton = new Button("Generate lessons");
-        generateLessonsButton.addClickListener(event -> refreshLessonsLayout(wordsPerDay.getValue()));
+        generateLessonsButton.addClickListener(event -> refreshLessonsLayout(Integer.parseInt(wordsPerDay.getValue())));
 
         generateLessonsHorizontalLayout.setDefaultVerticalComponentAlignment(Alignment.END);
         generateLessonsHorizontalLayout.add(wordsPerDay, generateLessonsButton);
     }
 
-    private void refreshLessonsLayout(String wordsPerDay) {
+    private void refreshLessonsLayout(int wordsPerDay) {
 
-        List<Word> newWords = book.newWords(previousBooks);
+        Set<Word> newWords = book.newWords(previousBooks);
 
-        Unit unit = new Unit(book.getId(), newWords, Integer.parseInt(wordsPerDay));
+        Unit unit = new Unit(newWords, wordsPerDay);
+
         List<WordLesson> wordLessons = unit.lessons();
         List<SentenceLesson> sentenceLessons = unit.sentenceLessons();
 
@@ -139,7 +140,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         lessonVerticalLayout.add(new Span("Day " + day));
 
         lesson.words().forEach(word -> {
-            lessonVerticalLayout.add(new TextField("", "", word.getValue()));
+            lessonVerticalLayout.add(new TextField("", word.getValue(), ""));
         });
 
         return lessonVerticalLayout;
@@ -202,7 +203,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
 
     private void refreshNewWordsLayout() {
 
-        List<Word> newWords = book.newWords(this.previousBooks);
+        Set<Word> newWords = book.newWords(this.previousBooks);
 
         newWordsHorizontalLayout.removeAll();
         newWordsHorizontalLayout.add(new Span("New words: " + newWords.size()));

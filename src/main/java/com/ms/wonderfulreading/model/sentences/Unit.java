@@ -2,18 +2,18 @@ package com.ms.wonderfulreading.model.sentences;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Unit {
 
-    private final Long bookId;
-    private List<WordLesson> wordLessons = new ArrayList<>();
-    private List<SentenceLesson> sentenceLessons = new ArrayList<>();
+    private final List<WordLesson> wordLessons = new ArrayList<>();
+    private final List<SentenceLesson> sentenceLessons = new ArrayList<>();
 
-    public Unit(Long bookId, List<Word> words, Integer perDay) {
+    public Unit(Set<Word> words, Integer perDay) {
 
-        this.bookId = bookId;
+        List<Word> wordList = new ArrayList<>(words);
 
-        int days = words.size() % perDay == 0 ? words.size() / perDay : words.size() / perDay + 1;
+        int days = wordList.size() % perDay == 0 ? wordList.size() / perDay : wordList.size() / perDay + 1;
 
         for (int i = 0; i < days; i++) {
 
@@ -24,8 +24,8 @@ public class Unit {
 
                 int index = i * perDay + k;
 
-                if (index < words.size()) {
-                    lessonWords.add(words.get(index));
+                if (index < wordList.size()) {
+                    lessonWords.add(wordList.get(index));
                 } else {
                     lessonWords.add(new Word("?"));
                 }
