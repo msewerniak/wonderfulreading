@@ -1,4 +1,4 @@
-package com.ms.wonderfulreading.model.sentences;
+package com.ms.wonderfulreading.model;
 
 import java.util.List;
 

@@ -2,12 +2,12 @@ package com.ms.wonderfulreading.books;
 
 import com.ms.wonderfulreading.BooksService;
 import com.ms.wonderfulreading.MainView;
-import com.ms.wonderfulreading.model.sentences.Book;
-import com.ms.wonderfulreading.model.sentences.Sentence;
-import com.ms.wonderfulreading.model.sentences.SentenceLesson;
-import com.ms.wonderfulreading.model.sentences.Unit;
-import com.ms.wonderfulreading.model.sentences.Word;
-import com.ms.wonderfulreading.model.sentences.WordLesson;
+import com.ms.wonderfulreading.model.Book;
+import com.ms.wonderfulreading.model.Sentence;
+import com.ms.wonderfulreading.model.SentenceLesson;
+import com.ms.wonderfulreading.model.Unit;
+import com.ms.wonderfulreading.model.Word;
+import com.ms.wonderfulreading.model.WordLesson;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;

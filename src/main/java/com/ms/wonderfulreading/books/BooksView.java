@@ -2,12 +2,14 @@ package com.ms.wonderfulreading.books;
 
 import com.ms.wonderfulreading.BooksService;
 import com.ms.wonderfulreading.MainView;
-import com.ms.wonderfulreading.model.sentences.Book;
+import com.ms.wonderfulreading.model.Book;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -22,17 +24,19 @@ public class BooksView extends Div {
     @Autowired
     public BooksView(BooksService booksService) {
         this.booksService = booksService;
-        booksService.getBooks().forEach(book -> add(addBookComponent(book)));
         add(addBookButton());
+        booksService.getBooks().forEach(book -> add(addBookComponent(book)));
     }
 
     private Component addBookButton() {
 
         Button addBookButton = new Button("Add Book");
+        addBookButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        
         addBookButton.addClickListener(event -> {
             UI.getCurrent().navigate("book/" + booksService.nextBookId());
         });
-        return addBookButton;
+        return new HorizontalLayout(addBookButton);
     }
 
     private Component addBookComponent(Book book) {

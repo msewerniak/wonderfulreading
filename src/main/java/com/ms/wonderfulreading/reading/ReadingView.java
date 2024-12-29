@@ -1,7 +1,8 @@
 package com.ms.wonderfulreading.reading;
 
+import com.ms.wonderfulreading.BooksService;
 import com.ms.wonderfulreading.MainView;
-import com.vaadin.flow.component.Text;
+import com.ms.wonderfulreading.model.Student;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -12,9 +13,11 @@ import com.vaadin.flow.router.RouteAlias;
 @Route(value = "reading", layout = MainView.class)
 public class ReadingView extends VerticalLayout {
 
-    public ReadingView() {
+    private final Student student;
 
-        Text text = new Text("You are in the home view");
-        add(text);
+    public ReadingView(BooksService booksService) {
+        student = new Student("Szymon", booksService.getBooks());
     }
+    
+
 }

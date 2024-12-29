@@ -1,6 +1,6 @@
 package com.ms.wonderfulreading;
 
-import com.ms.wonderfulreading.model.sentences.Book;
+import com.ms.wonderfulreading.model.Book;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
