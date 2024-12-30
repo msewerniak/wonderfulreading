@@ -1,6 +1,5 @@
-package com.ms.wonderfulreading.student;
+package com.ms.wonderfulreading.services;
 
-import com.ms.wonderfulreading.BooksService;
 import com.ms.wonderfulreading.model.Book;
 import com.ms.wonderfulreading.model.Lesson;
 import com.ms.wonderfulreading.model.Sentence;

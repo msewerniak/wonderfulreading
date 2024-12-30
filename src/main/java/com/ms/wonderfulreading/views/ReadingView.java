@@ -1,9 +1,9 @@
-package com.ms.wonderfulreading.reading;
+package com.ms.wonderfulreading.views;
 
 import com.ms.wonderfulreading.MainView;
 import com.ms.wonderfulreading.model.Lesson;
 import com.ms.wonderfulreading.model.Student;
-import com.ms.wonderfulreading.student.StudentService;
+import com.ms.wonderfulreading.services.StudentService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;

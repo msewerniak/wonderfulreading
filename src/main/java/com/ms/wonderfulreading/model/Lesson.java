@@ -7,9 +7,10 @@ import java.util.Random;
 public class Lesson {
 
     private final static int MAX_STEPS = 3;
-    private final List<String> sentences;
+
     private final Book book;
     private final Long id;
+    private final List<String> sentences;
     private int step;
 
     public Lesson(Long id, List<String> sentences, Book book) {
@@ -78,6 +79,6 @@ public class Lesson {
     }
 
     public String progress() {
-        return step + " / " + MAX_STEPS;
+        return step + "/" + MAX_STEPS;
     }
 }

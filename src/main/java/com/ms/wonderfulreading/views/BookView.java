@@ -1,6 +1,6 @@
-package com.ms.wonderfulreading.books;
+package com.ms.wonderfulreading.views;
 
-import com.ms.wonderfulreading.BooksService;
+import com.ms.wonderfulreading.services.BooksService;
 import com.ms.wonderfulreading.MainView;
 import com.ms.wonderfulreading.model.Book;
 import com.ms.wonderfulreading.model.Sentence;

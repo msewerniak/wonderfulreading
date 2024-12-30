@@ -15,8 +15,7 @@ public class Unit {
     }
 
     public Unit(Unit unit) {
-        this(unit.wordLessons.stream().map(WordLesson::new).toList(),
-                unit.sentenceLessons.stream().map(s -> new SentenceLesson(s)).toList());
+        this(unit.wordLessons.stream().map(WordLesson::new).toList(), unit.sentenceLessons.stream().map(SentenceLesson::new).toList());
     }
 
     public Unit(List<WordLesson> wordLessons, List<SentenceLesson> sentenceLessons) {

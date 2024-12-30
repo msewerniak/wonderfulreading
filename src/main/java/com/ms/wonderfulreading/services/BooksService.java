@@ -1,4 +1,4 @@
-package com.ms.wonderfulreading;
+package com.ms.wonderfulreading.services;
 
 import com.ms.wonderfulreading.model.Book;
 import com.ms.wonderfulreading.model.Sentence;
