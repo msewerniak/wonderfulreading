@@ -1,11 +1,10 @@
 package com.ms.wonderfulreading.views;
 
 import com.ms.wonderfulreading.MainView;
-import com.ms.wonderfulreading.model.book.Book;
 import com.ms.wonderfulreading.model.Sentence;
-import com.ms.wonderfulreading.model.book.SentenceLesson;
-import com.ms.wonderfulreading.model.book.Unit;
 import com.ms.wonderfulreading.model.Word;
+import com.ms.wonderfulreading.model.book.Book;
+import com.ms.wonderfulreading.model.book.SentenceLesson;
 import com.ms.wonderfulreading.model.book.WordLesson;
 import com.ms.wonderfulreading.services.BooksService;
 import com.vaadin.flow.component.Component;
@@ -109,10 +108,10 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             return;
         }
-        
+
         Book b = booksService.getById(id);
 
-        this.book = b == null ? new Book(id, "Book " + id, 3, new Unit(), new ArrayList<>()) : new Book(b);
+        this.book = b == null ? new Book(id, "Book " + id, 3, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()) : new Book(b);
         this.previousBooks = booksService.getPreviousBooks(id);
 
         add(buildTitleAndDaysLayout());
@@ -129,10 +128,8 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
 
     private void refreshLessonsLayout() {
 
-        Unit unit = book.getUnit();
-
-        List<WordLesson> wordLessons = unit.wordLessons();
-        List<SentenceLesson> sentenceLessons = unit.sentenceLessons();
+        List<WordLesson> wordLessons = book.getWordLessons();
+        List<SentenceLesson> sentenceLessons = book.getSentenceLessons();
 
         lessonsLayout.removeAll();
         for (int i = 0; i < wordLessons.size(); i++) {
@@ -239,14 +236,13 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void refreshNewWordsLayout() {
-        Set<Word> newWords = book.getUnit().newWords();
+        Set<Word> newWords = book.newWords();
         refreshWords(newWordsSearch, newWordsGrid, newWordsSummarySpan, newWords);
     }
 
     private void refreshKnownWordsLayout() {
 
-        Set<Word> knownWords =
-                previousBooks.stream().map(Book::getUnit).map(Unit::newWords).flatMap(Collection::stream).collect(Collectors.toSet());
+        Set<Word> knownWords = previousBooks.stream().map(Book::newWords).flatMap(Collection::stream).collect(Collectors.toSet());
         refreshWords(knownWordsSearch, knownWordsGrid, knownWordsSummarySpan, knownWords);
     }
 
@@ -255,7 +251,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         GridListDataView<Word> dataView = grid.setItems(words);
         dataView.addFilter(word -> word.getWord().toLowerCase().startsWith(search.getValue().toLowerCase().trim()));
         summary.setText("Words " + words.size());
-        
+
         search.addValueChangeListener(e -> dataView.refreshAll());
     }
 }

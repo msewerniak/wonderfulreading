@@ -1,7 +1,7 @@
 package com.ms.wonderfulreading.model.student;
 
 import com.ms.wonderfulreading.model.student.lesson.BookLesson;
-import com.ms.wonderfulreading.model.student.lesson.RandomWordLesson;
+import com.ms.wonderfulreading.model.student.lesson.WordLesson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,50 +10,55 @@ public class Student {
 
     private final String name;
 
-    private final List<BookLesson> lessons = new ArrayList<>();
-    private final List<RandomWordLesson> words = new ArrayList<>();
+    private final List<BookLesson> bookLessons = new ArrayList<>();
+    private final List<WordLesson> randomWordLessons = new ArrayList<>();
 
     private BookLesson nextPath1Lesson;
     private BookLesson nextPath2Lesson;
 
-    public Student(String name, List<BookLesson> lessons, List<RandomWordLesson> words) {
+    public Student(String name, List<BookLesson> bookLessons, List<WordLesson> randomWordLessons) {
         this.name = name;
-        this.lessons.addAll(lessons);
-        this.words.addAll(words);
-
-        nextPath1Lesson = lessons.get(0);
-        nextPath2Lesson = lessons.stream().filter(l -> !l.book().getId().equals(nextPath1Lesson.book().getId())).findFirst().get();
+        this.bookLessons.addAll(bookLessons);
+        this.randomWordLessons.addAll(randomWordLessons);
     }
 
-    public BookLesson byId(Long id) {
-        return lessons.stream().filter(l -> l.getId().equals(id)).findFirst().get();
+    public String getName() {
+        return name;
     }
 
-    public RandomWordLesson wLessonById(Long id) {
-        return words.stream().filter(w -> w.getId().equals(id)).findFirst().get();
+    public BookLesson bookLesson(Long id) {
+        return bookLessons.stream().filter(l -> l.getId().equals(id)).findFirst().get();
     }
 
-    public List<BookLesson> getLessons() {
-        return lessons;
+    public WordLesson randomLesson(Long id) {
+        return randomWordLessons.stream().filter(w -> w.getId().equals(id)).findFirst().get();
     }
 
-    public List<RandomWordLesson> getWords() {
-        return words;
+    public List<BookLesson> bookLessons() {
+        return bookLessons;
+    }
+
+    public List<WordLesson> randomWordLessons() {
+        return randomWordLessons;
     }
 
     public BookLesson nextPath1Lesson() {
         Long path2BookId = nextPath2Lesson != null ? nextPath2Lesson.book().getId() : null;
-        return lessons.stream().filter(l -> !l.isDone()).filter(lesson -> !lesson.book().getId().equals(path2BookId)).findFirst()
-                .orElse(null);
+        nextPath1Lesson =
+                bookLessons.stream().filter(l -> !l.isDone()).filter(lesson -> !lesson.book().getId().equals(path2BookId)).findFirst()
+                        .orElse(null);
+        return nextPath1Lesson;
     }
 
     public BookLesson nextPath2Lesson() {
         Long path1BookId = nextPath1Lesson != null ? nextPath1Lesson.book().getId() : null;
-        return lessons.stream().filter(l -> !l.isDone()).filter(lesson -> !lesson.book().getId().equals(path1BookId)).findFirst()
-                .orElse(null);
+        nextPath2Lesson =
+                bookLessons.stream().filter(l -> !l.isDone()).filter(lesson -> !lesson.book().getId().equals(path1BookId)).findFirst()
+                        .orElse(null);
+        return nextPath2Lesson;
     }
 
-    public RandomWordLesson nextWordLesson() {
-        return words.stream().filter(l -> !l.isDone()).findFirst().orElse(null);
+    public WordLesson nextWordLesson() {
+        return randomWordLessons.stream().filter(l -> !l.isDone()).findFirst().orElse(null);
     }
 }

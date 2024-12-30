@@ -14,7 +14,7 @@ public class BooksService {
         this.books = BooksDataSource.books();
     }
 
-    public List<Book> get() {
+    public List<Book> getAll() {
         return books;
     }
 
@@ -27,12 +27,11 @@ public class BooksService {
     }
 
     public void saveBook(Book book) {
-        books.stream().filter(b -> b.getId().equals(book.getId())).findFirst().ifPresentOrElse(b -> {
-            b.setName(book.getName());
-            b.setUnit(book.getUnit());
-            b.setWordsPerDay(book.getWordsPerDay());
-            b.setSentences(book.getSentences());
-        }, () -> books.add(book));
+        if (book.getId() < books.size()) {
+            books.set(book.getId().intValue(), book);
+        } else {
+            books.add(book);
+        }
     }
 
     public Long nextBookId() {

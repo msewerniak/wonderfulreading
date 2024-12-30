@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RandomWordLesson {
+public class WordLesson {
 
     private final static int MAX_STEPS = 3;
 
@@ -12,7 +12,7 @@ public class RandomWordLesson {
     private final List<String> sentences;
     private int step;
 
-    public RandomWordLesson(Long id, List<String> sentences) {
+    public WordLesson(Long id, List<String> sentences) {
         this.id = id;
         this.sentences = sentences;
         this.step = 0;

@@ -25,7 +25,7 @@ public class BooksView extends Div {
     public BooksView(BooksService booksService) {
         this.booksService = booksService;
         add(addBookButton());
-        booksService.get().forEach(book -> add(addBookComponent(book)));
+        booksService.getAll().forEach(book -> add(addBookComponent(book)));
     }
 
     private Component addBookButton() {
