@@ -17,3 +17,16 @@ vaadin-text-field.bordered::part(input-field) {
 }
 
 
+vaadin-grid::part(high-rating) {
+    background-color: var(--lumo-success-color-10pct);
+}
+
+vaadin-grid::part(low-rating) {
+    background-color: var(--lumo-error-color-10pct);
+}
+
+.prevent-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
