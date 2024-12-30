@@ -31,6 +31,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -104,15 +105,15 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         Long id = event.getRouteParameters().get(BOOK_ID).map(Long::parseLong).orElse(booksService.nextBookId());
 
-        Book b = booksService.getById(id);
-
-        if (b == null) {
+        if (id > booksService.nextBookId()) {
             Notification notification = Notification.show("Book with id " + id + " not found");
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             return;
         }
+        
+        Book b = booksService.getById(id);
 
-        this.book = new Book(b);
+        this.book = b == null ? new Book(id, "Book " + id, 3, new ArrayList<>()) : new Book(b);
         this.previousBooks = booksService.getPreviousBooks(id);
 
         add(buildTitleAndDaysLayout());
