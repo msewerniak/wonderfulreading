@@ -1,6 +1,8 @@
-package com.ms.wonderfulreading.model;
+package com.ms.wonderfulreading.model.book;
 
-import java.util.ArrayList;
+import com.ms.wonderfulreading.model.Sentence;
+import com.ms.wonderfulreading.model.Word;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,39 +15,23 @@ public class Book {
     private Unit unit;
     private List<Sentence> sentences;
 
-    public Book(Long id, String name, Integer wordsPerDay, List<String> sentences) {
-        this(id, name, wordsPerDay, new Unit(), sentences);
-    }
-
-    public Book(Long id, String name, Integer wordsPerDay, Unit unit, List<String> sentences) {
+    public Book(Long id, String name, Integer wordsPerDay, Unit unit, List<Sentence> sentences) {
         this.id = id;
         this.name = name;
         this.wordsPerDay = wordsPerDay;
         this.unit = unit;
-        this.sentences = new ArrayList<>();
-        sentences.forEach(s -> this.sentences.add(new Sentence(s)));
-    }
-
-
-    public Book(Book book) {
-        this(book.id, book.name, book.wordsPerDay, new Unit(book.unit), book.sentences.stream().map(Sentence::getSentence).toList());
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Sentence> getSentences() {
-        return sentences;
-    }
-
-    public void setSentences(List<Sentence> sentences) {
         this.sentences = sentences;
     }
+
+    /**
+     * Copy constructor.
+     */
+    public Book(Book book) {
+        this(book.id, book.name, book.wordsPerDay, new Unit(book.unit),
+                book.sentences.stream().map(Sentence::new).collect(Collectors.toList()));
+    }
+
+    // Methods
 
     private Set<Word> wordsFromSentences() {
         return sentences.stream().map(Sentence::words).flatMap(Set::stream).filter(Word::hasValue).collect(Collectors.toSet());
@@ -59,12 +45,27 @@ public class Book {
         return wordsFromSentences().stream().filter(word -> !previousWords.contains(word)).collect(Collectors.toSet());
     }
 
+    public void generateUnit(List<Book> previousBooks) {
+        Set<Word> newWords = generateNewWords(previousBooks);
+        this.unit = new Unit(newWords, wordsPerDay);
+    }
+
+    // Getters, setters
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getWordsPerDay() {
@@ -82,9 +83,12 @@ public class Book {
     public void setUnit(Unit unit) {
         this.unit = unit;
     }
+    
+    public List<Sentence> getSentences() {
+        return sentences;
+    }
 
-    public void generateUnit(List<Book> previousBooks) {
-        Set<Word> newWords = generateNewWords(previousBooks);
-        this.unit = new Unit(newWords, wordsPerDay);
+    public void setSentences(List<Sentence> sentences) {
+        this.sentences = sentences;
     }
 }

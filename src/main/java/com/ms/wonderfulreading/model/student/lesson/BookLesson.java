@@ -1,10 +1,12 @@
-package com.ms.wonderfulreading.model;
+package com.ms.wonderfulreading.model.student.lesson;
+
+import com.ms.wonderfulreading.model.book.Book;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Lesson {
+public class BookLesson {
 
     private final static int MAX_STEPS = 3;
 
@@ -13,7 +15,7 @@ public class Lesson {
     private final List<String> sentences;
     private int step;
 
-    public Lesson(Long id, List<String> sentences, Book book) {
+    public BookLesson(Long id, List<String> sentences, Book book) {
         this.id = id;
         this.sentences = sentences;
         this.book = book;

@@ -1,12 +1,12 @@
 package com.ms.wonderfulreading.views;
 
 import com.ms.wonderfulreading.MainView;
-import com.ms.wonderfulreading.model.Book;
+import com.ms.wonderfulreading.model.book.Book;
 import com.ms.wonderfulreading.model.Sentence;
-import com.ms.wonderfulreading.model.SentenceLesson;
-import com.ms.wonderfulreading.model.Unit;
+import com.ms.wonderfulreading.model.book.SentenceLesson;
+import com.ms.wonderfulreading.model.book.Unit;
 import com.ms.wonderfulreading.model.Word;
-import com.ms.wonderfulreading.model.WordLesson;
+import com.ms.wonderfulreading.model.book.WordLesson;
 import com.ms.wonderfulreading.services.BooksService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -21,7 +21,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -113,7 +112,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         
         Book b = booksService.getById(id);
 
-        this.book = b == null ? new Book(id, "Book " + id, 3, new ArrayList<>()) : new Book(b);
+        this.book = b == null ? new Book(id, "Book " + id, 3, new Unit(), new ArrayList<>()) : new Book(b);
         this.previousBooks = booksService.getPreviousBooks(id);
 
         add(buildTitleAndDaysLayout());
@@ -153,10 +152,10 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         lessonVerticalLayout.add(new Span("Day " + day));
 
         lesson.words().forEach(word -> {
-            TextField wordTextField = new TextField("", word.getValue(), "");
+            TextField wordTextField = new TextField("", word.getWord(), "");
             wordTextField.setClearButtonVisible(true);
             wordTextField.addValueChangeListener(event -> {
-                word.setValue(event.getValue());
+                word.setWord(event.getValue());
                 refreshNewWordsLayout();
             });
             lessonVerticalLayout.add(wordTextField);
@@ -229,7 +228,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
     private Component buildWordsLayout(Grid<Word> grid, TextField searchTextField, Span summary) {
 
         grid.setMinWidth("200px");
-        grid.addColumn(Word::getValue);
+        grid.addColumn(Word::getWord);
 
         searchTextField.setPlaceholder("Search");
         searchTextField.setClearButtonVisible(true);
@@ -254,7 +253,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
     private void refreshWords(TextField search, Grid<Word> grid, Span summary, Set<Word> words) {
 
         GridListDataView<Word> dataView = grid.setItems(words);
-        dataView.addFilter(word -> word.getValue().toLowerCase().startsWith(search.getValue().toLowerCase().trim()));
+        dataView.addFilter(word -> word.getWord().toLowerCase().startsWith(search.getValue().toLowerCase().trim()));
         summary.setText("Words " + words.size());
         
         search.addValueChangeListener(e -> dataView.refreshAll());

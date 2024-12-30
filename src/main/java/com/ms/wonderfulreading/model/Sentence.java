@@ -27,7 +27,7 @@ public class Sentence {
         this.sentence = sentence;
     }
 
-    Set<Word> words() {
+    public Set<Word> words() {
         return Arrays.stream(sentence.split("\s")).filter(k -> !k.isEmpty()).map(Word::new).collect(Collectors.toSet());
     }
 

@@ -2,7 +2,7 @@ package com.ms.wonderfulreading.views;
 
 import com.ms.wonderfulreading.MainView;
 import com.ms.wonderfulreading.model.Word;
-import com.ms.wonderfulreading.model.WordLesson;
+import com.ms.wonderfulreading.model.book.WordLesson;
 import com.ms.wonderfulreading.services.WordsService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -90,10 +90,10 @@ public class WordsView extends VerticalLayout {
         lessonHorizontalLayout.add(new Span("Day " + day));
 
         lesson.words().forEach(word -> {
-            TextField wordTextField = new TextField("", word.getValue(), "");
+            TextField wordTextField = new TextField("", word.getWord(), "");
             wordTextField.setClearButtonVisible(true);
             wordTextField.addValueChangeListener(event -> {
-                word.setValue(event.getValue());
+                word.setWord(event.getValue());
             });
             lessonHorizontalLayout.add(wordTextField);
         });

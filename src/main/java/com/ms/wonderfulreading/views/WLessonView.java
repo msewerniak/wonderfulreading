@@ -1,7 +1,6 @@
 package com.ms.wonderfulreading.views;
 
-import com.ms.wonderfulreading.model.Lesson;
-import com.ms.wonderfulreading.model.WLesson;
+import com.ms.wonderfulreading.model.student.lesson.RandomWordLesson;
 import com.ms.wonderfulreading.services.StudentService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Span;
@@ -24,7 +23,7 @@ public class WLessonView extends VerticalLayout implements BeforeEnterObserver {
     private final Span sentenceSpan = new Span();
     private final StudentService studentService;
     private List<String> sentencesToLearn = new ArrayList<>();
-    private WLesson lesson;
+    private RandomWordLesson lesson;
 
     public WLessonView(StudentService studentService) {
         this.studentService = studentService;

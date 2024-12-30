@@ -1,10 +1,10 @@
-package com.ms.wonderfulreading.model;
+package com.ms.wonderfulreading.model.student.lesson;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class WLesson {
+public class RandomWordLesson {
 
     private final static int MAX_STEPS = 3;
 
@@ -12,7 +12,7 @@ public class WLesson {
     private final List<String> sentences;
     private int step;
 
-    public WLesson(Long id, List<String> sentences) {
+    public RandomWordLesson(Long id, List<String> sentences) {
         this.id = id;
         this.sentences = sentences;
         this.step = 0;

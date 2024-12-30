@@ -1,4 +1,6 @@
-package com.ms.wonderfulreading.model;
+package com.ms.wonderfulreading.model.book;
+
+import com.ms.wonderfulreading.model.Word;
 
 import java.util.ArrayList;
 import java.util.List;

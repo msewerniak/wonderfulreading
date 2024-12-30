@@ -1,9 +1,9 @@
 package com.ms.wonderfulreading.views;
 
 import com.ms.wonderfulreading.MainView;
-import com.ms.wonderfulreading.model.Lesson;
-import com.ms.wonderfulreading.model.Student;
-import com.ms.wonderfulreading.model.WLesson;
+import com.ms.wonderfulreading.model.student.lesson.BookLesson;
+import com.ms.wonderfulreading.model.student.Student;
+import com.ms.wonderfulreading.model.student.lesson.RandomWordLesson;
 import com.ms.wonderfulreading.services.StudentService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -24,8 +24,8 @@ public class LessonsView extends HorizontalLayout {
     private final Button nextPath2LessonButton = new Button();
     private final Button nextWordsButton = new Button();
 
-    private final Grid<Lesson> lessonsGrid = new Grid<>(Lesson.class, false);
-    private final Grid<WLesson> wordsGrid = new Grid<>(WLesson.class, false);
+    private final Grid<BookLesson> lessonsGrid = new Grid<>(BookLesson.class, false);
+    private final Grid<RandomWordLesson> wordsGrid = new Grid<>(RandomWordLesson.class, false);
     
     private final Student student;
 
@@ -38,7 +38,7 @@ public class LessonsView extends HorizontalLayout {
         add(new VerticalLayout(nextWordsButton, wordsGrid));
 
         lessonsGrid.addColumn(lesson -> lesson.book().getName());
-        lessonsGrid.addColumn(Lesson::progress);
+        lessonsGrid.addColumn(BookLesson::progress);
         lessonsGrid.addColumn(new LessonValueProvider(0));
         lessonsGrid.addColumn(new LessonValueProvider(1));
         lessonsGrid.addColumn(new LessonValueProvider(2));
@@ -51,7 +51,7 @@ public class LessonsView extends HorizontalLayout {
             UI.getCurrent().navigate("lesson/" + event.getItem().getId());
         });
 
-        wordsGrid.addColumn(WLesson::progress);
+        wordsGrid.addColumn(RandomWordLesson::progress);
         wordsGrid.addColumn(new WLessonValueProvider(0));
         wordsGrid.addColumn(new WLessonValueProvider(1));
         wordsGrid.addColumn(new WLessonValueProvider(2));
@@ -69,7 +69,7 @@ public class LessonsView extends HorizontalLayout {
         refreshWLessonButtons(student.nextWordLesson(), nextWordsButton);
     }
 
-    private void refreshNextPathButtons(Lesson lesson, Button lessonButton) {
+    private void refreshNextPathButtons(BookLesson lesson, Button lessonButton) {
 
         if (lesson != null) {
             lessonButton.setText(lesson.summary());
@@ -80,7 +80,7 @@ public class LessonsView extends HorizontalLayout {
         }
     }
 
-    private void refreshWLessonButtons(WLesson lesson, Button lessonButton) {
+    private void refreshWLessonButtons(RandomWordLesson lesson, Button lessonButton) {
 
         if (lesson != null) {
             lessonButton.setText(lesson.summary());
@@ -91,7 +91,7 @@ public class LessonsView extends HorizontalLayout {
         }
     }
 
-    static class LessonValueProvider implements ValueProvider<Lesson, String> {
+    static class LessonValueProvider implements ValueProvider<BookLesson, String> {
 
         private final int index;
 
@@ -100,12 +100,12 @@ public class LessonsView extends HorizontalLayout {
         }
 
         @Override
-        public String apply(Lesson lesson) {
+        public String apply(BookLesson lesson) {
             return lesson.sentences().size() > index ? lesson.sentences().get(index) : null;
         }
     }
 
-    static class WLessonValueProvider implements ValueProvider<WLesson, String> {
+    static class WLessonValueProvider implements ValueProvider<RandomWordLesson, String> {
 
         private final int index;
 
@@ -114,7 +114,7 @@ public class LessonsView extends HorizontalLayout {
         }
 
         @Override
-        public String apply(WLesson lesson) {
+        public String apply(RandomWordLesson lesson) {
             return lesson.sentences().size() > index ? lesson.sentences().get(index) : null;
         }
     }

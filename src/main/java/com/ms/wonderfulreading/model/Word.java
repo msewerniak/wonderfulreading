@@ -4,29 +4,29 @@ import java.util.Objects;
 
 public class Word {
 
-    private String value;
+    private String word;
 
     /**
      * Copy constructor.
      */
     public Word(Word word) {
-        this(word.getValue());
+        this(word.getWord());
     }
     
-    public Word(String value) {
-        this.value = value;
+    public Word(String word) {
+        this.word = word;
     }
 
-    public String getValue() {
-        return value;
+    public String getWord() {
+        return word;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setWord(String word) {
+        this.word = word;
     }
 
     public boolean hasValue() {
-        return value != null && !value.isEmpty();
+        return word != null && !word.isEmpty();
     }
 
     @Override
@@ -39,16 +39,16 @@ public class Word {
         }
 
         Word word = (Word) o;
-        return Objects.equals(value, word.value);
+        return Objects.equals(this.word, word.word);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(value);
+        return Objects.hashCode(word);
     }
 
     @Override
     public String toString() {
-        return value;
+        return word;
     }
 }

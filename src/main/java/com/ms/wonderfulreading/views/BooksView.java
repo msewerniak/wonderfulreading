@@ -2,7 +2,7 @@ package com.ms.wonderfulreading.views;
 
 import com.ms.wonderfulreading.services.BooksService;
 import com.ms.wonderfulreading.MainView;
-import com.ms.wonderfulreading.model.Book;
+import com.ms.wonderfulreading.model.book.Book;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -25,7 +25,7 @@ public class BooksView extends Div {
     public BooksView(BooksService booksService) {
         this.booksService = booksService;
         add(addBookButton());
-        booksService.getBooks().forEach(book -> add(addBookComponent(book)));
+        booksService.get().forEach(book -> add(addBookComponent(book)));
     }
 
     private Component addBookButton() {
