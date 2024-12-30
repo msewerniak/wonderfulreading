@@ -5,6 +5,7 @@ import com.ms.wonderfulreading.model.Lesson;
 import com.ms.wonderfulreading.model.Sentence;
 import com.ms.wonderfulreading.model.SentenceLesson;
 import com.ms.wonderfulreading.model.Student;
+import com.ms.wonderfulreading.model.WLesson;
 import com.ms.wonderfulreading.model.Word;
 import com.ms.wonderfulreading.model.WordLesson;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class StudentService {
 
     private final Student student;
 
-    public StudentService(BooksService booksService) {
+    public StudentService(BooksService booksService, WordsService wordsService) {
 
         List<Book> books = booksService.getBooks();
 
@@ -33,7 +34,14 @@ public class StudentService {
             }
         }
 
-        this.student = new Student("Szymon", lessons);
+        List<WLesson> words = new ArrayList<>();
+
+        long idd = 0;
+        for (WordLesson wl : wordsService.getWordLessons()) {
+            words.add(new WLesson(idd++, wl.words().stream().map(Word::getValue).toList()));
+        }
+
+        this.student = new Student("Szymon", lessons, words);
     }
 
     public Student getStudent() {

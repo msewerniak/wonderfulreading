@@ -4,19 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Lesson {
+public class WLesson {
 
     private final static int MAX_STEPS = 3;
 
-    private final Book book;
     private final Long id;
     private final List<String> sentences;
     private int step;
 
-    public Lesson(Long id, List<String> sentences, Book book) {
+    public WLesson(Long id, List<String> sentences) {
         this.id = id;
         this.sentences = sentences;
-        this.book = book;
         this.step = 0;
     }
 
@@ -58,18 +56,11 @@ public class Lesson {
         return sentences;
     }
 
-    public Book book() {
-        return book;
-    }
-
     public Long getId() {
         return id;
     }
 
     public String summary() {
-        if (book != null) {
-            return String.format("%s: %s", book.getName(), String.join(", ", sentences));
-        }
         return String.join(", ", sentences);
     }
 
