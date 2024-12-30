@@ -14,6 +14,9 @@ public class Unit {
     public Unit() {
     }
 
+    /**
+     * Copy constructor.
+     */
     public Unit(Unit unit) {
         this(unit.wordLessons.stream().map(WordLesson::new).toList(), unit.sentenceLessons.stream().map(SentenceLesson::new).toList());
     }

@@ -2,6 +2,7 @@ package com.ms.wonderfulreading;
 
 import com.ms.wonderfulreading.views.BooksView;
 import com.ms.wonderfulreading.views.LessonsView;
+import com.ms.wonderfulreading.views.WordsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -131,6 +132,6 @@ public class MainView extends AppLayout {
     }
 
     private Component[] createMenuItems() {
-        return new Tab[]{createTab("Lessons", LessonsView.class), createTab("Books", BooksView.class)};
+        return new Tab[]{createTab("Lessons", LessonsView.class), createTab("Books", BooksView.class), createTab("Words", WordsView.class)};
     }
 }

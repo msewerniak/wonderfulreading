@@ -6,6 +6,9 @@ public class Word {
 
     private String value;
 
+    /**
+     * Copy constructor.
+     */
     public Word(Word word) {
         this(word.getValue());
     }

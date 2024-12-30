@@ -15,21 +15,13 @@ public class Lesson {
 
     public Lesson(Long id, List<String> sentences, Book book) {
         this.id = id;
-        this.sentences = new ArrayList<>(sentences);
+        this.sentences = sentences;
         this.book = book;
         this.step = 0;
     }
 
     public List<String> nextSentences() {
-        if (step == 0) {
-            return shuffle(sentences);
-        } else if (step == 1) {
-            return shuffle(sentences);
-        } else if (step == 2) {
-            return shuffle(sentences);
-        } else {
-            throw new RuntimeException("Unreachable");
-        }
+        return shuffle(sentences);
     }
 
     private List<String> shuffle(List<String> sentences) {

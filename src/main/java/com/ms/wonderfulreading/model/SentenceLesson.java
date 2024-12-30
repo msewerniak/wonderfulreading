@@ -6,6 +6,9 @@ public final class SentenceLesson {
 
     private final List<Sentence> sentences;
 
+    /**
+     * Copy constructor.
+     */
     public SentenceLesson(SentenceLesson sentenceLesson) {
         this(sentenceLesson.sentences.stream().map(Sentence::new).toList());
     }

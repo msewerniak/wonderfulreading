@@ -8,6 +8,9 @@ public class Sentence {
 
     private String sentence;
 
+    /**
+     * Copy constructor.
+     */
     public Sentence(Sentence sentence) {
         this(sentence.getSentence());
     }

@@ -146,25 +146,6 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         lessonsLayout.add(bookSentencesLayout);
     }
 
-    private static Component createWordsLayout(Collection<Word> newWords) {
-
-        VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setMaxHeight("300px");
-
-        newWords.forEach(word -> {
-
-            TextField textField = new TextField();
-            textField.setReadOnly(true);
-            textField.setValue(word.getValue());
-
-            verticalLayout.add(textField);
-        });
-
-        Scroller scroller = new Scroller(verticalLayout);
-        scroller.getStyle().set("border", "1px solid var(--lumo-contrast-20pct)").set("padding", "var(--lumo-space-m)");
-        return scroller;
-    }
-
     private Component buildWordsLessonLayout(WordLesson lesson, int day) {
 
         VerticalLayout lessonVerticalLayout = new VerticalLayout();
