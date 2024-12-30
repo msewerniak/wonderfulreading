@@ -14,10 +14,10 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 
-@PageTitle("Reading")
+@PageTitle("Lessons")
 @RouteAlias(value = "", layout = MainView.class)
-@Route(value = "reading", layout = MainView.class)
-public class ReadingView extends VerticalLayout {
+@Route(value = "lessons", layout = MainView.class)
+public class LessonsView extends VerticalLayout {
 
     private final Button nextPath1LessonButton = new Button();
     private final Button nextPath2LessonButton = new Button();
@@ -25,7 +25,7 @@ public class ReadingView extends VerticalLayout {
     private final Grid<Lesson> lessonsGrid = new Grid<>(Lesson.class, false);
     private final Student student;
 
-    public ReadingView(StudentService studentService) {
+    public LessonsView(StudentService studentService) {
         student = studentService.getStudent();
 
         setSizeFull();

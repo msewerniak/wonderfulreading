@@ -1,6 +1,5 @@
 package com.ms.wonderfulreading.views;
 
-import com.ms.wonderfulreading.services.BooksService;
 import com.ms.wonderfulreading.MainView;
 import com.ms.wonderfulreading.model.Book;
 import com.ms.wonderfulreading.model.Sentence;
@@ -8,6 +7,7 @@ import com.ms.wonderfulreading.model.SentenceLesson;
 import com.ms.wonderfulreading.model.Unit;
 import com.ms.wonderfulreading.model.Word;
 import com.ms.wonderfulreading.model.WordLesson;
+import com.ms.wonderfulreading.services.BooksService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -18,6 +18,8 @@ import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -29,7 +31,6 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -103,8 +104,15 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         Long id = event.getRouteParameters().get(BOOK_ID).map(Long::parseLong).orElse(booksService.nextBookId());
 
-        Book bookById = booksService.getById(id);
-        this.book = bookById != null ? new Book(bookById) : new Book(id, "Book " + id, 3, new ArrayList<>());
+        Book b = booksService.getById(id);
+
+        if (b == null) {
+            Notification notification = Notification.show("Book with id " + id + " not found");
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return;
+        }
+
+        this.book = new Book(b);
         this.previousBooks = booksService.getPreviousBooks(id);
 
         add(buildTitleAndDaysLayout());

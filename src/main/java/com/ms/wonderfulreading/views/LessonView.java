@@ -11,6 +11,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @PageTitle("Lesson")
@@ -21,10 +22,12 @@ public class LessonView extends VerticalLayout implements BeforeEnterObserver {
 
     private final Span sentenceSpan = new Span();
     private final StudentService studentService;
-    private List<String> sentencesToLearn;
+    private List<String> sentencesToLearn = new ArrayList<>();
+    private Lesson lesson;
 
     public LessonView(StudentService studentService) {
         this.studentService = studentService;
+        sentenceSpan.addClassName("prevent-select");
 
         HorizontalLayout horizontalLayout = new HorizontalLayout(sentenceSpan);
         horizontalLayout.setHeightFull();
@@ -33,32 +36,30 @@ public class LessonView extends VerticalLayout implements BeforeEnterObserver {
         this.setSizeFull();
         this.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         this.add(horizontalLayout);
+        this.addClickListener(e -> {
+            if (sentencesToLearn.isEmpty()) {
+                lesson.stepDone();
+                UI.getCurrent().navigate("lessons");
+            } else {
+                showNextSentence();
+            }
+        });
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        Long id = event.getRouteParameters().get(LESSON_ID).map(Long::parseLong).orElseThrow();
+        Long lessonId = event.getRouteParameters().get(LESSON_ID).map(Long::parseLong).orElseThrow();
 
-        Lesson lesson = studentService.getStudent().byId(id);
-
+        lesson = studentService.getStudent().byId(lessonId);
         sentencesToLearn = lesson.nextSentences();
 
-        sentenceSpan.addClassName("prevent-select");
+        showNextSentence();
+    }
 
-        String s = sentencesToLearn.remove(0);
-        adjustFontSize(s.length());
-        sentenceSpan.setText(s);
-
-        this.addClickListener(e -> {
-            if (sentencesToLearn.isEmpty()) {
-                lesson.stepDone();
-                UI.getCurrent().navigate("reading");
-            } else {
-                String ss = sentencesToLearn.remove(0);
-                sentenceSpan.setText(ss);
-                adjustFontSize(ss.length());
-            }
-        });
+    private void showNextSentence() {
+        String ss = sentencesToLearn.remove(0);
+        adjustFontSize(ss.length());
+        sentenceSpan.setText(ss);
     }
 
     private void adjustFontSize(int sentenceLength) {
