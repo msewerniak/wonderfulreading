@@ -11,13 +11,15 @@ import java.util.stream.Collectors;
 
 public class Book {
 
+    public static final int DEFAULT_WORDS_PER_DAY = 3;
+
     private Long id;
     private String name;
     private Integer wordsPerDay;
 
-    private List<Sentence> sentences;
-    private List<WordLesson> wordLessons;
-    private List<SentenceLesson> sentenceLessons;
+    private final List<Sentence> sentences;
+    private final List<WordLesson> wordLessons;
+    private final List<SentenceLesson> sentenceLessons;
 
     public Book(Long id, String name, Integer wordsPerDay, List<Sentence> sentences, List<WordLesson> wordLessons,
             List<SentenceLesson> sentenceLessons) {
@@ -27,6 +29,10 @@ public class Book {
         this.sentences = sentences;
         this.wordLessons = wordLessons;
         this.sentenceLessons = sentenceLessons;
+    }
+
+    public Book(Long id, String name) {
+        this(id, name, DEFAULT_WORDS_PER_DAY, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
     /**
@@ -96,6 +102,11 @@ public class Book {
         }
     }
 
+    public void clearEmptySentences() {
+        List<Sentence> emptySentences = sentences.stream().filter(s -> s.getSentence().isEmpty()).toList();
+        sentences.removeAll(emptySentences);
+    }
+
     // Getters, setters
 
     public Long getId() {
@@ -124,9 +135,5 @@ public class Book {
 
     public List<Sentence> getSentences() {
         return sentences;
-    }
-
-    public void setSentences(List<Sentence> sentences) {
-        this.sentences = sentences;
     }
 }

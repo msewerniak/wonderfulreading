@@ -111,7 +111,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
 
         Book b = booksService.getById(id);
 
-        this.book = b == null ? new Book(id, "Book " + id, 3, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()) : new Book(b);
+        this.book = b == null ? new Book(id, "Book " + id) : new Book(b);
         this.previousBooks = booksService.getPreviousBooks(id);
 
         add(buildTitleAndDaysLayout());
@@ -212,7 +212,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void clearEmptyBookSentencesAndRefresh() {
-        book.setSentences(book.getSentences().stream().filter(s -> !s.getSentence().isEmpty()).collect(Collectors.toList()));
+        book.clearEmptySentences();
         refreshBookSentencesLayout();
     }
 
