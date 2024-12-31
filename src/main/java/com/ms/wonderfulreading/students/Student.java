@@ -1,5 +1,6 @@
 package com.ms.wonderfulreading.students;
 
+import com.ms.wonderfulreading.learning.paths.books.Book;
 import com.ms.wonderfulreading.students.lessons.book.BookLesson;
 import com.ms.wonderfulreading.students.lessons.noreps.NoRepsLesson;
 
@@ -48,16 +49,38 @@ public class Student {
         return bookLessons;
     }
 
-    public void setBookLessons(List<BookLesson> bookLessons) {
-        this.bookLessons = bookLessons;
-    }
-
     public List<NoRepsLesson> getNoRepsLessons() {
         return noRepsLessons;
     }
 
-    public void setNoRepsLessons(List<NoRepsLesson> noRepsLessons) {
-        this.noRepsLessons = noRepsLessons;
+    public void updateBookLessons(List<BookLesson> bookLessons) {
+        for (BookLesson bookLesson : bookLessons) {
+            Long bookLessonId = bookLesson.getId();
+            this.bookLessons.stream().filter(b1 -> b1.getId().equals(bookLessonId)).findFirst().ifPresentOrElse(b -> {
+                if (!isAnyBookLessonInProgress(b.book())) {
+                    b.setSentences(bookLesson.getSentences());
+                }
+            }, () -> this.bookLessons.add(bookLesson));
+        }
+    }
+
+    private boolean isAnyBookLessonInProgress(Book book) {
+        boolean inprogress = this.bookLessons.stream().filter(l -> {
+            Book book1 = l.book();
+            return book1.getId().equals(book.getId());
+        }).anyMatch(NoRepsLesson::isInProgress);
+        return inprogress;
+    }
+
+    public void updateNoRepsLessons(List<NoRepsLesson> noRepsLessons) {
+        for (NoRepsLesson noRepsLesson : noRepsLessons) {
+            Long noRepsLessonId = noRepsLesson.getId();
+            this.noRepsLessons.stream().filter(b1 -> b1.getId().equals(noRepsLessonId)).findFirst().ifPresentOrElse(b -> {
+                if (!b.isInProgress()) {
+                    b.setSentences(noRepsLesson.getSentences());
+                }
+            }, () -> this.noRepsLessons.add(noRepsLesson));
+        }
     }
 
     public BookLesson bookLesson(Long id) {
@@ -68,15 +91,7 @@ public class Student {
         return noRepsLessons.stream().filter(w -> w.getId().equals(id)).findFirst().get();
     }
 
-    public List<BookLesson> bookLessons() {
-        return bookLessons;
-    }
-
-    public List<NoRepsLesson> noRepsLessons() {
-        return noRepsLessons;
-    }
-
-    public BookLesson nextPath1Lesson() {
+    public BookLesson nextPath1BookLesson() {
         Long path2BookId = nextPath2Lesson != null ? nextPath2Lesson.book().getId() : null;
         nextPath1Lesson =
                 bookLessons.stream().filter(l -> !l.isDone()).filter(lesson -> !lesson.book().getId().equals(path2BookId)).findFirst()
@@ -84,7 +99,7 @@ public class Student {
         return nextPath1Lesson;
     }
 
-    public BookLesson nextPath2Lesson() {
+    public BookLesson nextPath2BookLesson() {
         Long path1BookId = nextPath1Lesson != null ? nextPath1Lesson.book().getId() : null;
         nextPath2Lesson =
                 bookLessons.stream().filter(l -> !l.isDone()).filter(lesson -> !lesson.book().getId().equals(path1BookId)).findFirst()
@@ -92,7 +107,7 @@ public class Student {
         return nextPath2Lesson;
     }
 
-    public NoRepsLesson nextWordLesson() {
+    public NoRepsLesson nextNoRepsLesson() {
         return noRepsLessons.stream().filter(l -> !l.isDone()).findFirst().orElse(null);
     }
 }

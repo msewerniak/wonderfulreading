@@ -57,8 +57,12 @@ public class NoRepsLesson {
         return step >= MAX_STEPS;
     }
 
-    public List<String> sentences() {
+    public List<String> getSentences() {
         return sentences;
+    }
+
+    public void setSentences(List<String> sentences) {
+        this.sentences = sentences;
     }
 
     public Long getId() {

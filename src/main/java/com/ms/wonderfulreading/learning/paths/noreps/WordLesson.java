@@ -21,4 +21,8 @@ public final class WordLesson {
     public List<Word> words() {
         return words;
     }
+
+    public boolean isEmpty() {
+        return words.isEmpty() || words.stream().noneMatch(Word::hasValue);
+    }
 }

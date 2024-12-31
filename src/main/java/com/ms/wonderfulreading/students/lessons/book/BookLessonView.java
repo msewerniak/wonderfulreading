@@ -1,5 +1,6 @@
 package com.ms.wonderfulreading.students.lessons.book;
 
+import com.ms.wonderfulreading.students.Student;
 import com.ms.wonderfulreading.students.StudentsService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Span;
@@ -14,15 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @PageTitle("Lesson")
-@Route(value = "lesson/:lessonId")
+@Route(value = "students/:studentName/lessons/book/:lessonId")
 public class BookLessonView extends VerticalLayout implements BeforeEnterObserver {
 
     public static final String LESSON_ID = "lessonId";
+    public static final String STUDENT_NAME = "studentName";
 
     private final Span sentenceSpan = new Span();
     private final StudentsService studentService;
     private List<String> sentencesToLearn = new ArrayList<>();
     private BookLesson lesson;
+    private Student student;
 
     public BookLessonView(StudentsService studentService) {
         this.studentService = studentService;
@@ -38,7 +41,7 @@ public class BookLessonView extends VerticalLayout implements BeforeEnterObserve
         this.addClickListener(e -> {
             if (sentencesToLearn.isEmpty()) {
                 lesson.stepDone();
-                UI.getCurrent().navigate("lessons");
+                UI.getCurrent().navigate("students/" + student.getName() + "/lessons");
             } else {
                 showNextSentence();
             }
@@ -48,8 +51,10 @@ public class BookLessonView extends VerticalLayout implements BeforeEnterObserve
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         Long lessonId = event.getRouteParameters().get(LESSON_ID).map(Long::parseLong).orElseThrow();
+        String studentName = event.getRouteParameters().get(STUDENT_NAME).orElseThrow();
 
-        lesson = studentService.getStudent().bookLesson(lessonId);
+        student = studentService.getByName(studentName);
+        lesson = student.bookLesson(lessonId);
         sentencesToLearn = lesson.nextSentences();
 
         showNextSentence();

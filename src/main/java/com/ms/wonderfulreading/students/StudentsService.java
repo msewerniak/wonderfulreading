@@ -16,10 +16,6 @@ public class StudentsService {
         this.students = new ArrayList<>(List.of(new Student(0L, "Szymon", bookLessonsGenerator.generate(), lessonsGenerator.generate())));
     }
 
-    public Student getStudent() {
-        return getByName("Szymon");
-    }
-
     public Student getByName(String name) {
         return students.stream().filter(student -> student.getName().equals(name)).findFirst().orElse(null);
     }
@@ -37,6 +33,6 @@ public class StudentsService {
     }
 
     public Long nextStudentId() {
-        return students.size() + 1L;
+        return (long) students.size();
     }
 }

@@ -53,24 +53,24 @@ public class StudentsView extends VerticalLayout {
             });
             saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-            Span bookLessonsSummarySpan = new Span("Book lessons: " + student.bookLessons().size());
+            Span bookLessonsSummarySpan = new Span("Book lessons: " + student.getBookLessons().size());
             bookLessonsSummarySpan.setWidth("150px");
             Button bookLessonsGenerateButton = new Button("Generate book lessons", event -> {
-                student.setBookLessons(bookLessonsGenerator.generate());
-                bookLessonsSummarySpan.setText("Book lessons: " + student.bookLessons().size());
+                student.updateBookLessons(bookLessonsGenerator.generate());
+                bookLessonsSummarySpan.setText("Book lessons: " + student.getBookLessons().size());
             });
 
-            Span noRepsLessonsSummarySpan = new Span("No reps lessons: " + student.noRepsLessons().size());
+            Span noRepsLessonsSummarySpan = new Span("No reps lessons: " + student.getNoRepsLessons().size());
             noRepsLessonsSummarySpan.setWidth("150px");
             Button noRepsLessonsGenerateButton = new Button("Generate no reps lessons", event -> {
-                student.setNoRepsLessons(noRepsLessonsGenerator.generate());
-                noRepsLessonsSummarySpan.setText("No reps lessons: " + student.noRepsLessons().size());
+                student.updateNoRepsLessons(noRepsLessonsGenerator.generate());
+                noRepsLessonsSummarySpan.setText("No reps lessons: " + student.getNoRepsLessons().size());
             });
 
             Button goToStudentButton = new Button("Learnings", event -> {
-                UI.getCurrent().navigate("student/" + student.getName() + "/lessons");
+                UI.getCurrent().navigate("students/" + student.getName() + "/lessons");
             });
-            goToStudentButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+            goToStudentButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
             HorizontalLayout horizontalLayout =
                     new HorizontalLayout(studentNameTextField, saveButton, bookLessonsSummarySpan, bookLessonsGenerateButton,

@@ -34,6 +34,6 @@ public class BooksService {
     }
 
     public Long nextBookId() {
-        return books.size() + 1L;
+        return (long) books.size();
     }
 }

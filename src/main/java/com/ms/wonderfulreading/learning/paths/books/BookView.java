@@ -104,7 +104,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
 
         Book b = booksService.getById(id);
 
-        this.book = b == null ? new Book(id, "Book " + id) : new Book(b);
+        this.book = b == null ? new Book(id, "Book " + id + 1) : new Book(b);
         this.previousBooks = booksService.getPreviousBooks(id);
 
         add(buildTitleAndDaysLayout());

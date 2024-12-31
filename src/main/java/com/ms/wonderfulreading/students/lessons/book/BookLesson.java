@@ -16,7 +16,7 @@ public class BookLesson extends NoRepsLesson {
     }
 
     public BookLesson(BookLesson bookLesson) {
-        this(bookLesson.id, new ArrayList<>(bookLesson.sentences()), bookLesson.step, bookLesson.book);
+        this(bookLesson.id, new ArrayList<>(bookLesson.getSentences()), bookLesson.step, bookLesson.book);
     }
 
     public Book book() {
