@@ -1,8 +1,9 @@
 package com.ms.wonderfulreading;
 
-import com.ms.wonderfulreading.model.book.BooksView;
-import com.ms.wonderfulreading.model.student.LessonsView;
-import com.ms.wonderfulreading.model.word.WordsView;
+import com.ms.wonderfulreading.learning.paths.books.BooksView;
+import com.ms.wonderfulreading.learning.paths.noreps.WordsView;
+import com.ms.wonderfulreading.students.StudentsView;
+import com.ms.wonderfulreading.students.lessons.LessonsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -132,6 +133,7 @@ public class MainView extends AppLayout {
     }
 
     private Component[] createMenuItems() {
-        return new Tab[]{createTab("Lessons", LessonsView.class), createTab("Books", BooksView.class), createTab("Words", WordsView.class)};
+        return new Tab[]{createTab("Lessons", LessonsView.class), createTab("Books", BooksView.class), createTab("Words", WordsView.class),
+                createTab("Students", StudentsView.class)};
     }
 }

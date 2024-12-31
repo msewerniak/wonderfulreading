@@ -1,6 +1,6 @@
-package com.ms.wonderfulreading.model.student.lesson;
+package com.ms.wonderfulreading.students.lessons.book;
 
-import com.ms.wonderfulreading.model.student.StudentService;
+import com.ms.wonderfulreading.students.StudentsService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -13,18 +13,18 @@ import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
 import java.util.List;
 
-@PageTitle("Word Lesson")
-@Route(value = "wlesson/:lessonId")
-public class LessonView extends VerticalLayout implements BeforeEnterObserver {
+@PageTitle("Lesson")
+@Route(value = "lesson/:lessonId")
+public class BookLessonView extends VerticalLayout implements BeforeEnterObserver {
 
     public static final String LESSON_ID = "lessonId";
 
     private final Span sentenceSpan = new Span();
-    private final StudentService studentService;
+    private final StudentsService studentService;
     private List<String> sentencesToLearn = new ArrayList<>();
-    private Lesson lesson;
+    private BookLesson lesson;
 
-    public LessonView(StudentService studentService) {
+    public BookLessonView(StudentsService studentService) {
         this.studentService = studentService;
         sentenceSpan.addClassName("prevent-select");
 
@@ -49,7 +49,7 @@ public class LessonView extends VerticalLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         Long lessonId = event.getRouteParameters().get(LESSON_ID).map(Long::parseLong).orElseThrow();
 
-        lesson = studentService.getStudent().randomLesson(lessonId);
+        lesson = studentService.getStudent().bookLesson(lessonId);
         sentencesToLearn = lesson.nextSentences();
 
         showNextSentence();

@@ -1,4 +1,4 @@
-package com.ms.wonderfulreading.model.word;
+package com.ms.wonderfulreading.learning.paths.noreps;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.ms.wonderfulreading.model.book;
+package com.ms.wonderfulreading.learning.paths.books;
 
 import java.util.List;
 import java.util.stream.Collectors;

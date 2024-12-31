@@ -1,4 +1,4 @@
-package com.ms.wonderfulreading.model.word;
+package com.ms.wonderfulreading.learning.paths.noreps;
 
 import com.ms.wonderfulreading.MainView;
 import com.vaadin.flow.component.Component;

@@ -1,4 +1,4 @@
-package com.ms.wonderfulreading.model.word;
+package com.ms.wonderfulreading.learning.paths.noreps;
 
 import org.springframework.stereotype.Service;
 

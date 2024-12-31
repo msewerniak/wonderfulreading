@@ -1,8 +1,10 @@
-package com.ms.wonderfulreading.model.student;
+package com.ms.wonderfulreading.students.lessons;
 
 import com.ms.wonderfulreading.MainView;
-import com.ms.wonderfulreading.model.student.booklesson.BookLesson;
-import com.ms.wonderfulreading.model.student.lesson.Lesson;
+import com.ms.wonderfulreading.students.lessons.book.BookLesson;
+import com.ms.wonderfulreading.students.lessons.noreps.NoRepsLesson;
+import com.ms.wonderfulreading.students.Student;
+import com.ms.wonderfulreading.students.StudentsService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -23,11 +25,11 @@ public class LessonsView extends HorizontalLayout {
     private final Button nextWordsButton = new Button();
 
     private final Grid<BookLesson> lessonsGrid = new Grid<>(BookLesson.class, false);
-    private final Grid<Lesson> wordsGrid = new Grid<>(Lesson.class, false);
+    private final Grid<NoRepsLesson> wordsGrid = new Grid<>(NoRepsLesson.class, false);
     
     private final Student student;
 
-    public LessonsView(StudentService studentService) {
+    public LessonsView(StudentsService studentService) {
         student = studentService.getStudent();
 
         setSizeFull();
@@ -49,13 +51,13 @@ public class LessonsView extends HorizontalLayout {
             UI.getCurrent().navigate("lesson/" + event.getItem().getId());
         });
 
-        wordsGrid.addColumn(Lesson::progress);
+        wordsGrid.addColumn(NoRepsLesson::progress);
         wordsGrid.addColumn(new WLessonValueProvider(0));
         wordsGrid.addColumn(new WLessonValueProvider(1));
         wordsGrid.addColumn(new WLessonValueProvider(2));
         wordsGrid.addColumn(new WLessonValueProvider(3));
         wordsGrid.addColumn(new WLessonValueProvider(4));
-        wordsGrid.setItems(student.randomWordLessons());
+        wordsGrid.setItems(student.noRepsLessons());
 
         wordsGrid.setPartNameGenerator(lesson -> lesson.isDone() ? "high-rating" : (lesson.isInProgress() ? "low-rating" : ""));
         wordsGrid.addItemDoubleClickListener(event -> {
@@ -78,7 +80,7 @@ public class LessonsView extends HorizontalLayout {
         }
     }
 
-    private void refreshWLessonButtons(Lesson lesson, Button lessonButton) {
+    private void refreshWLessonButtons(NoRepsLesson lesson, Button lessonButton) {
 
         if (lesson != null) {
             lessonButton.setText(lesson.summary());
@@ -103,7 +105,7 @@ public class LessonsView extends HorizontalLayout {
         }
     }
 
-    static class WLessonValueProvider implements ValueProvider<Lesson, String> {
+    static class WLessonValueProvider implements ValueProvider<NoRepsLesson, String> {
 
         private final int index;
 
@@ -112,7 +114,7 @@ public class LessonsView extends HorizontalLayout {
         }
 
         @Override
-        public String apply(Lesson lesson) {
+        public String apply(NoRepsLesson lesson) {
             return lesson.sentences().size() > index ? lesson.sentences().get(index) : null;
         }
     }

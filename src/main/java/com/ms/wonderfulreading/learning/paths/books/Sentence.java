@@ -1,6 +1,4 @@
-package com.ms.wonderfulreading.model.book;
-
-import com.ms.wonderfulreading.model.word.Word;
+package com.ms.wonderfulreading.learning.paths.books;
 
 import java.util.Arrays;
 import java.util.Set;

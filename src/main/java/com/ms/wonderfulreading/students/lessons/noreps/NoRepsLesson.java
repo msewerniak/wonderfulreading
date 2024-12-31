@@ -1,22 +1,26 @@
-package com.ms.wonderfulreading.model.student.lesson;
+package com.ms.wonderfulreading.students.lessons.noreps;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Lesson {
+public class NoRepsLesson {
 
+    public static final int INITIAL_STEP = 0;
     private final static int MAX_STEPS = 3;
 
-    private final Long id;
+    protected final Long id;
+    protected List<String> sentences;
+    protected int step;
 
-    private final List<String> sentences;
-    private int step;
-
-    public Lesson(Long id, List<String> sentences) {
+    public NoRepsLesson(Long id, List<String> sentences, int step) {
         this.id = id;
         this.sentences = sentences;
-        this.step = 0;
+        this.step = step;
+    }
+
+    public NoRepsLesson(NoRepsLesson noRepsLesson) {
+        this(noRepsLesson.id, noRepsLesson.sentences, noRepsLesson.step);
     }
 
     public List<String> nextSentences() {

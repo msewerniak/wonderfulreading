@@ -1,4 +1,4 @@
-package com.ms.wonderfulreading.model.word;
+package com.ms.wonderfulreading.learning.paths.noreps;
 
 import java.util.Objects;
 
@@ -12,7 +12,7 @@ public class Word {
     public Word(Word word) {
         this(word.getWord());
     }
-    
+
     public Word(String word) {
         this.word = word;
     }

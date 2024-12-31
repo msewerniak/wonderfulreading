@@ -1,4 +1,4 @@
-package com.ms.wonderfulreading.model.book;
+package com.ms.wonderfulreading.learning.paths.books;
 
 import com.ms.wonderfulreading.MainView;
 import com.vaadin.flow.component.Component;
@@ -11,7 +11,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @PageTitle("Books")
 @Route(value = "books", layout = MainView.class)
@@ -19,7 +18,6 @@ public class BooksView extends Div {
 
     private final BooksService booksService;
 
-    @Autowired
     public BooksView(BooksService booksService) {
         this.booksService = booksService;
         add(addBookButton());
@@ -30,7 +28,7 @@ public class BooksView extends Div {
 
         Button addBookButton = new Button("Add Book");
         addBookButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        
+
         addBookButton.addClickListener(event -> {
             UI.getCurrent().navigate("book/" + booksService.nextBookId());
         });
