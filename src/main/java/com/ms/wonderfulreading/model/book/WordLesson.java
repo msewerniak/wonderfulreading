@@ -4,6 +4,7 @@ import com.ms.wonderfulreading.model.Word;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class WordLesson {
 
@@ -13,7 +14,7 @@ public final class WordLesson {
      * Copy constructor.
      */
     public WordLesson(WordLesson wordLesson) {
-        this(new ArrayList<>(wordLesson.words.stream().map(Word::new).toList()));
+        this(new ArrayList<>(wordLesson.words.stream().map(Word::new).collect(Collectors.toList())));
     }
 
     public WordLesson(List<Word> words) {

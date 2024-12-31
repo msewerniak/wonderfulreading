@@ -29,7 +29,6 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -76,7 +75,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         bookNumberOfDaysTextField.setValue(book.getWordsPerDay());
         bookNumberOfDaysTextField.addValueChangeListener(event -> {
             book.setWordsPerDay(event.getValue());
-            book.generateUnit(previousBooks);
+            book.generateLessons(previousBooks);
             refreshLessonsLayout();
         });
         titleAndDaysLayout.addFormItem(bookNumberOfDaysTextField, "Words per day");
@@ -192,7 +191,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
                 if (event.getValue().isEmpty()) {
                     clearEmptyBookSentencesAndRefresh();
                 }
-                book.generateUnit(previousBooks);
+                book.generateLessons(previousBooks);
                 refreshLessonsLayout();
                 refreshNewWordsLayout();
             });
@@ -204,7 +203,7 @@ public class BookView extends VerticalLayout implements BeforeEnterObserver {
         newSentenceTextField.addValueChangeListener(event -> {
             book.getSentences().add(new Sentence(event.getValue()));
             refreshBookSentencesLayout();
-            book.generateUnit(previousBooks);
+            book.generateLessons(previousBooks);
             refreshLessonsLayout();
             refreshNewWordsLayout();
         });

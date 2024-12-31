@@ -70,7 +70,7 @@ public class Book {
         return wordsFromSentences().stream().filter(word -> !previousWords.contains(word)).collect(Collectors.toSet());
     }
 
-    public void generateUnit(List<Book> previousBooks) {
+    public void generateLessons(List<Book> previousBooks) {
         Set<Word> newWords = generateNewWords(previousBooks);
 
         List<Word> wordList = new ArrayList<>(newWords);
