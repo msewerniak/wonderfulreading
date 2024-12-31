@@ -1,7 +1,7 @@
 package com.ms.wonderfulreading.model.student;
 
-import com.ms.wonderfulreading.model.student.lesson.BookLesson;
-import com.ms.wonderfulreading.model.student.lesson.WordLesson;
+import com.ms.wonderfulreading.model.student.booklesson.BookLesson;
+import com.ms.wonderfulreading.model.student.lesson.Lesson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +11,12 @@ public class Student {
     private final String name;
 
     private final List<BookLesson> bookLessons = new ArrayList<>();
-    private final List<WordLesson> randomWordLessons = new ArrayList<>();
+    private final List<Lesson> randomWordLessons = new ArrayList<>();
 
     private BookLesson nextPath1Lesson;
     private BookLesson nextPath2Lesson;
 
-    public Student(String name, List<BookLesson> bookLessons, List<WordLesson> randomWordLessons) {
+    public Student(String name, List<BookLesson> bookLessons, List<Lesson> randomWordLessons) {
         this.name = name;
         this.bookLessons.addAll(bookLessons);
         this.randomWordLessons.addAll(randomWordLessons);
@@ -30,7 +30,7 @@ public class Student {
         return bookLessons.stream().filter(l -> l.getId().equals(id)).findFirst().get();
     }
 
-    public WordLesson randomLesson(Long id) {
+    public Lesson randomLesson(Long id) {
         return randomWordLessons.stream().filter(w -> w.getId().equals(id)).findFirst().get();
     }
 
@@ -38,7 +38,7 @@ public class Student {
         return bookLessons;
     }
 
-    public List<WordLesson> randomWordLessons() {
+    public List<Lesson> randomWordLessons() {
         return randomWordLessons;
     }
 
@@ -58,7 +58,7 @@ public class Student {
         return nextPath2Lesson;
     }
 
-    public WordLesson nextWordLesson() {
+    public Lesson nextWordLesson() {
         return randomWordLessons.stream().filter(l -> !l.isDone()).findFirst().orElse(null);
     }
 }

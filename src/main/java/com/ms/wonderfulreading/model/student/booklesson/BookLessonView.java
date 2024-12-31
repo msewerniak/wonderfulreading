@@ -1,7 +1,6 @@
-package com.ms.wonderfulreading.views;
+package com.ms.wonderfulreading.model.student.booklesson;
 
-import com.ms.wonderfulreading.model.student.lesson.BookLesson;
-import com.ms.wonderfulreading.services.StudentService;
+import com.ms.wonderfulreading.model.student.StudentService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;

@@ -1,15 +1,12 @@
-package com.ms.wonderfulreading.services;
+package com.ms.wonderfulreading.model.book;
 
-import com.ms.wonderfulreading.model.Sentence;
-import com.ms.wonderfulreading.model.Word;
-import com.ms.wonderfulreading.model.book.Book;
-import com.ms.wonderfulreading.model.book.SentenceLesson;
-import com.ms.wonderfulreading.model.book.WordLesson;
+import com.ms.wonderfulreading.model.word.Word;
+import com.ms.wonderfulreading.model.word.WordLesson;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BooksDataSource {
+public class BooksRepository {
 
     public static List<Book> books() {
 

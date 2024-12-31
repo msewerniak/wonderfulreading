@@ -1,7 +1,7 @@
 package com.ms.wonderfulreading.model.book;
 
-import com.ms.wonderfulreading.model.Sentence;
-import com.ms.wonderfulreading.model.Word;
+import com.ms.wonderfulreading.model.word.Word;
+import com.ms.wonderfulreading.model.word.WordLesson;
 
 import java.util.ArrayList;
 import java.util.Collection;

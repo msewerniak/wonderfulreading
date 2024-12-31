@@ -1,6 +1,5 @@
-package com.ms.wonderfulreading.services;
+package com.ms.wonderfulreading.model.book;
 
-import com.ms.wonderfulreading.model.book.Book;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +10,7 @@ public class BooksService {
     private final List<Book> books;
 
     public BooksService() {
-        this.books = BooksDataSource.books();
+        this.books = BooksRepository.books();
     }
 
     public List<Book> getAll() {

@@ -1,8 +1,8 @@
 package com.ms.wonderfulreading;
 
-import com.ms.wonderfulreading.views.BooksView;
-import com.ms.wonderfulreading.views.LessonsView;
-import com.ms.wonderfulreading.views.WordsView;
+import com.ms.wonderfulreading.model.book.BooksView;
+import com.ms.wonderfulreading.model.student.LessonsView;
+import com.ms.wonderfulreading.model.word.WordsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;

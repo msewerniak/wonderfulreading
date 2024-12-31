@@ -1,7 +1,5 @@
-package com.ms.wonderfulreading.services;
+package com.ms.wonderfulreading.model.word;
 
-import com.ms.wonderfulreading.model.Word;
-import com.ms.wonderfulreading.model.book.WordLesson;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

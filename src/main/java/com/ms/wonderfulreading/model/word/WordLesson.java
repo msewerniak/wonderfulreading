@@ -1,8 +1,5 @@
-package com.ms.wonderfulreading.model.book;
+package com.ms.wonderfulreading.model.word;
 
-import com.ms.wonderfulreading.model.Word;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +11,7 @@ public final class WordLesson {
      * Copy constructor.
      */
     public WordLesson(WordLesson wordLesson) {
-        this(new ArrayList<>(wordLesson.words.stream().map(Word::new).collect(Collectors.toList())));
+        this(wordLesson.words.stream().map(Word::new).collect(Collectors.toList()));
     }
 
     public WordLesson(List<Word> words) {

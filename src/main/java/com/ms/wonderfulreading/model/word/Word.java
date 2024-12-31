@@ -1,4 +1,4 @@
-package com.ms.wonderfulreading.model;
+package com.ms.wonderfulreading.model.word;
 
 import java.util.Objects;
 

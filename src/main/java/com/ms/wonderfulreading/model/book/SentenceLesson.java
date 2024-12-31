@@ -1,7 +1,5 @@
 package com.ms.wonderfulreading.model.book;
 
-import com.ms.wonderfulreading.model.Sentence;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

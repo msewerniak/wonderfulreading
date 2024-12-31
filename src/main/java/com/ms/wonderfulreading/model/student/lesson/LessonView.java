@@ -1,7 +1,6 @@
-package com.ms.wonderfulreading.views;
+package com.ms.wonderfulreading.model.student.lesson;
 
-import com.ms.wonderfulreading.model.student.lesson.WordLesson;
-import com.ms.wonderfulreading.services.StudentService;
+import com.ms.wonderfulreading.model.student.StudentService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,16 +15,16 @@ import java.util.List;
 
 @PageTitle("Word Lesson")
 @Route(value = "wlesson/:lessonId")
-public class WordLessonView extends VerticalLayout implements BeforeEnterObserver {
+public class LessonView extends VerticalLayout implements BeforeEnterObserver {
 
     public static final String LESSON_ID = "lessonId";
 
     private final Span sentenceSpan = new Span();
     private final StudentService studentService;
     private List<String> sentencesToLearn = new ArrayList<>();
-    private WordLesson lesson;
+    private Lesson lesson;
 
-    public WordLessonView(StudentService studentService) {
+    public LessonView(StudentService studentService) {
         this.studentService = studentService;
         sentenceSpan.addClassName("prevent-select");
 

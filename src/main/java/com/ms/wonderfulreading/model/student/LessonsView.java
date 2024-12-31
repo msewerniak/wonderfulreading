@@ -1,10 +1,8 @@
-package com.ms.wonderfulreading.views;
+package com.ms.wonderfulreading.model.student;
 
 import com.ms.wonderfulreading.MainView;
-import com.ms.wonderfulreading.model.student.lesson.BookLesson;
-import com.ms.wonderfulreading.model.student.Student;
-import com.ms.wonderfulreading.model.student.lesson.WordLesson;
-import com.ms.wonderfulreading.services.StudentService;
+import com.ms.wonderfulreading.model.student.booklesson.BookLesson;
+import com.ms.wonderfulreading.model.student.lesson.Lesson;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -25,7 +23,7 @@ public class LessonsView extends HorizontalLayout {
     private final Button nextWordsButton = new Button();
 
     private final Grid<BookLesson> lessonsGrid = new Grid<>(BookLesson.class, false);
-    private final Grid<WordLesson> wordsGrid = new Grid<>(WordLesson.class, false);
+    private final Grid<Lesson> wordsGrid = new Grid<>(Lesson.class, false);
     
     private final Student student;
 
@@ -51,7 +49,7 @@ public class LessonsView extends HorizontalLayout {
             UI.getCurrent().navigate("lesson/" + event.getItem().getId());
         });
 
-        wordsGrid.addColumn(WordLesson::progress);
+        wordsGrid.addColumn(Lesson::progress);
         wordsGrid.addColumn(new WLessonValueProvider(0));
         wordsGrid.addColumn(new WLessonValueProvider(1));
         wordsGrid.addColumn(new WLessonValueProvider(2));
@@ -80,7 +78,7 @@ public class LessonsView extends HorizontalLayout {
         }
     }
 
-    private void refreshWLessonButtons(WordLesson lesson, Button lessonButton) {
+    private void refreshWLessonButtons(Lesson lesson, Button lessonButton) {
 
         if (lesson != null) {
             lessonButton.setText(lesson.summary());
@@ -105,7 +103,7 @@ public class LessonsView extends HorizontalLayout {
         }
     }
 
-    static class WLessonValueProvider implements ValueProvider<WordLesson, String> {
+    static class WLessonValueProvider implements ValueProvider<Lesson, String> {
 
         private final int index;
 
@@ -114,7 +112,7 @@ public class LessonsView extends HorizontalLayout {
         }
 
         @Override
-        public String apply(WordLesson lesson) {
+        public String apply(Lesson lesson) {
             return lesson.sentences().size() > index ? lesson.sentences().get(index) : null;
         }
     }
